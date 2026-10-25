@@ -2,8 +2,8 @@
 import type { McpServer, McpRepository } from '../../types/mcp';
 import { TAXONOMY, type CategoryRule } from './taxonomy';
 
-const SRC_WEIGHT = { owner: 6, package: 4, name: 3, title: 2, description: 1 } as const;
-const MIN_SCORE = 3; // below → "other"
+const SRC_WEIGHT = { owner: 6, package: 4, name: 3, title: 2, description: 2 } as const;
+const MIN_SCORE = 2; // below → "other"
 const TAG_SCORE = 2; // secondary category threshold
 
 type FieldKey = keyof typeof SRC_WEIGHT;
@@ -18,11 +18,24 @@ export function tokenize(input: string | undefined): string[] {
         .filter(Boolean);
 }
 
+// Code-host authorities in the registry's reverse-DNS namespace. The host token
+// (e.g. "github" in "io.github.alice/x") is registry plumbing, not a category
+// signal — strip it so every GitHub-hosted server isn't read as a dev tool.
+const HOST_AUTHORITIES = new Set(['github', 'gitlab', 'bitbucket', 'gitea', 'codeberg']);
+
 // Owner/namespace tokens: reverse-DNS name segments + repository owner.
 export function ownerTokens(name: string, repository?: McpRepository): string[] {
     const tokens: string[] = [];
-    // Reverse-DNS id, e.g. "ac.inference.sh/mcp" → ["ac","inference","sh","mcp"].
-    for (const part of name.split(/[/.]/)) tokens.push(...tokenize(part));
+    const slash = name.indexOf('/');
+    const authority = slash >= 0 ? name.slice(0, slash) : name;
+    const path = slash >= 0 ? name.slice(slash + 1) : '';
+    // Reverse-DNS authority, e.g. "ac.inference.sh" → ["ac","inference","sh"].
+    let segs = authority.split('.').filter(Boolean);
+    if (segs.length > 2 && segs[0] === 'io' && HOST_AUTHORITIES.has(segs[1]!)) {
+        segs = segs.slice(2); // drop "io.github"/"io.gitlab"/… plumbing prefix
+    }
+    for (const part of segs) tokens.push(...tokenize(part));
+    for (const part of path.split(/[/.]/)) tokens.push(...tokenize(part));
     if (repository?.url) {
         try {
             const u = new URL(repository.url);
