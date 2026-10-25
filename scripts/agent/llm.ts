@@ -3,7 +3,7 @@
 // arguments). Override with NVIDIA_MODEL if the default is retired.
 
 const BASE_URL = process.env.NVIDIA_BASE_URL || 'https://integrate.api.nvidia.com/v1';
-const MODEL = process.env.NVIDIA_MODEL || 'nvidia/llama-3.3-nemotron-super-49b-v1.5';
+const MODEL = process.env.NVIDIA_MODEL || 'deepseek-ai/deepseek-v4.1-flash';
 
 interface ToolSchema {
     name: string;
