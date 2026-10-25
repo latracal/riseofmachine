@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-25T17:15:37.138Z",
+  "generatedAt": "2026-10-25T18:31:52.305Z",
   "servers": [
     {
       "slug": "ai-agenttrust-mcp-server",
@@ -44,6 +44,70 @@
         "https://agenttrust.ai/icon.png"
       ],
       "iconUrl": "https://agenttrust.ai/icon.png"
+    },
+    {
+      "slug": "ai-agentutility-mcp-agentops",
+      "name": "ai.agentutility/mcp-agentops",
+      "title": "AgentUtility Agentops",
+      "description": "MCP server for the @agentutility agentops cluster — pay-per-call x402 tools, no API keys, USDC on…",
+      "version": "0.1.1",
+      "url": "https://mcp.agentutility.ai/agentops/",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "@agentutility/mcp-agentops",
+          "transport": "stdio",
+          "version": "0.1.1",
+          "registryBaseUrl": "https://registry.npmjs.org"
+        }
+      ],
+      "installCommand": "npx -y @agentutility/mcp-agentops@0.1.1",
+      "installKind": "package",
+      "category": "ai-agents",
+      "categories": [
+        "ai-agents"
+      ],
+      "status": "active",
+      "publishedAt": "2026-07-14T21:10:14.904919Z",
+      "updatedAt": "2026-07-14T21:10:14.904919Z",
+      "websiteUrl": "https://mcp.agentutility.ai/agentops/",
+      "repository": {
+        "url": "https://github.com/rooz21/x402",
+        "source": "github"
+      }
+    },
+    {
+      "slug": "ai-ankimcp-anki-mcp-server",
+      "name": "ai.ankimcp/anki-mcp-server",
+      "title": "Anki MCP Server",
+      "description": "MCP server for Anki flashcards: adaptive review, notes, media, and deck management via AnkiConnect.",
+      "version": "0.27.0",
+      "url": "https://ankimcp.ai",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "@ankimcp/anki-mcp-server",
+          "transport": "stdio",
+          "version": "0.27.0",
+          "registryBaseUrl": "https://registry.npmjs.org"
+        }
+      ],
+      "installCommand": "npx -y @ankimcp/anki-mcp-server@0.27.0",
+      "installKind": "package",
+      "category": "media",
+      "categories": [
+        "media"
+      ],
+      "status": "active",
+      "publishedAt": "2026-10-04T18:28:29.903104Z",
+      "updatedAt": "2026-10-04T18:28:29.903104Z",
+      "websiteUrl": "https://ankimcp.ai",
+      "repository": {
+        "url": "https://github.com/ankimcp/anki-mcp-server",
+        "source": "github"
+      }
     },
     {
       "slug": "ai-aquex-reasonbook",
@@ -2079,6 +2143,36 @@
       "websiteUrl": "https://proofslip.ai",
       "repository": {
         "url": "https://github.com/Johnny-Z13/proofslip",
+        "source": "github"
+      }
+    },
+    {
+      "slug": "ai-qompass-eigenstyle",
+      "name": "ai.qompass/eigenstyle",
+      "title": "Eigenstyle",
+      "description": "MCP server for a personal voice profile: corpus, fingerprint, and draft-checking tools.",
+      "version": "0.1.1",
+      "url": "https://qompass.ai/solutions/eigenstyle/",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "mcpb",
+          "identifier": "https://github.com/qompassai/eigenstyle/releases/download/v0.1.1/eigenstyle-mcp-0.1.1-linux-x64.mcpb",
+          "transport": "stdio"
+        }
+      ],
+      "installCommand": "mcpb install https://github.com/qompassai/eigenstyle/releases/download/v0.1.1/eigenstyle-mcp-0.1.1-linux-x64.mcpb",
+      "installKind": "package",
+      "category": "other",
+      "categories": [
+        "other"
+      ],
+      "status": "active",
+      "publishedAt": "2026-10-19T00:42:49.95262Z",
+      "updatedAt": "2026-10-19T00:42:49.95262Z",
+      "websiteUrl": "https://qompass.ai/solutions/eigenstyle/",
+      "repository": {
+        "url": "https://github.com/qompassai/eigenstyle",
         "source": "github"
       }
     },
@@ -4316,7 +4410,6 @@
       "category": "ai-llm",
       "categories": [
         "ai-llm",
-        "ai-agents",
         "maps-location"
       ],
       "status": "active",
@@ -4406,8 +4499,7 @@
       "category": "ai-llm",
       "categories": [
         "ai-llm",
-        "security",
-        "ai-agents"
+        "security"
       ],
       "status": "active",
       "publishedAt": "2026-08-24T03:40:51.154986Z",
@@ -5499,7 +5591,6 @@
       "category": "databases",
       "categories": [
         "databases",
-        "ai-agents",
         "web-scraping"
       ],
       "status": "active",
@@ -7737,8 +7828,8 @@
       "category": "payments-finance",
       "categories": [
         "payments-finance",
-        "ai-agents",
-        "docs-knowledge"
+        "docs-knowledge",
+        "ai-agents"
       ],
       "status": "active",
       "publishedAt": "2026-09-13T12:24:21.396644Z",
@@ -9273,6 +9364,36 @@
       "iconUrl": "https://www.catastrogps.es/images/logo/favicon-512.png"
     },
     {
+      "slug": "com-parkerfawcett-rebuild-dossier",
+      "name": "com.parkerfawcett/rebuild-dossier",
+      "title": "Rebuild Dossier",
+      "description": "MCP server that reverse-engineers a locked rebuild spec from an existing app.",
+      "version": "0.2.6",
+      "url": "https://github.com/Parker-Fawcett/rebuild-dossier",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "rebuild-dossier",
+          "transport": "stdio",
+          "version": "0.2.6"
+        }
+      ],
+      "installCommand": "npx -y rebuild-dossier@0.2.6",
+      "installKind": "package",
+      "category": "other",
+      "categories": [
+        "other"
+      ],
+      "status": "active",
+      "publishedAt": "2026-09-05T00:21:54.832163Z",
+      "updatedAt": "2026-09-05T00:21:54.832163Z",
+      "repository": {
+        "url": "https://github.com/Parker-Fawcett/rebuild-dossier",
+        "source": "github"
+      }
+    },
+    {
       "slug": "com-paxalabs-mcp",
       "name": "com.paxalabs/mcp",
       "title": "Paxa Labs",
@@ -10736,6 +10857,42 @@
       }
     },
     {
+      "slug": "com-stringutilitybelt-mcp",
+      "name": "com.stringutilitybelt/mcp",
+      "title": "String Utility Belt",
+      "description": "MCP server exposing String Utility Belt's utilities and pipelines as tools for AI agents.",
+      "version": "1.10.2",
+      "url": "https://stringutilitybelt.com",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "@string-utility-belt/mcp",
+          "transport": "stdio",
+          "version": "1.10.2"
+        }
+      ],
+      "installCommand": "npx -y @string-utility-belt/mcp@1.10.2",
+      "installKind": "package",
+      "category": "ai-agents",
+      "categories": [
+        "ai-agents"
+      ],
+      "status": "active",
+      "publishedAt": "2026-10-25T03:31:09.08188Z",
+      "updatedAt": "2026-10-25T03:31:09.08188Z",
+      "websiteUrl": "https://stringutilitybelt.com",
+      "repository": {
+        "url": "https://github.com/String-Utility-Belt/string-utility-belt",
+        "source": "github"
+      },
+      "icons": [
+        "https://stringutilitybelt.com/icons/icon-192.png",
+        "https://stringutilitybelt.com/icons/icon-512.png"
+      ],
+      "iconUrl": "https://stringutilitybelt.com/icons/icon-192.png"
+    },
+    {
       "slug": "com-subcloak-cloak-proxy",
       "name": "com.subcloak/cloak-proxy",
       "title": "Cloak Proxy",
@@ -11383,6 +11540,40 @@
       "repository": {
         "url": "https://github.com/TwelveTake-Studios/reaper-mcp",
         "source": "github"
+      }
+    },
+    {
+      "slug": "com-uibeats-mcp",
+      "name": "com.uibeats/mcp",
+      "title": "UI Beats",
+      "description": "MCP server for UI Beats. Let your coding agent search, read and install animated React components.",
+      "version": "0.1.3",
+      "url": "https://uibeats.com",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "@uibeats/mcp",
+          "transport": "stdio",
+          "version": "0.1.3"
+        }
+      ],
+      "installCommand": "npx -y @uibeats/mcp@0.1.3",
+      "installKind": "package",
+      "category": "ai-agents",
+      "categories": [
+        "ai-agents",
+        "design",
+        "search"
+      ],
+      "status": "active",
+      "publishedAt": "2026-08-23T11:04:37.395467Z",
+      "updatedAt": "2026-08-23T11:04:37.395467Z",
+      "websiteUrl": "https://uibeats.com",
+      "repository": {
+        "url": "https://github.com/nikhils4/ui-beats",
+        "source": "github",
+        "id": "825856991"
       }
     },
     {
@@ -13999,9 +14190,9 @@
       ],
       "installCommand": "OPENAEO_API_KEY=<value> npx openaeo-audit@1.6.4 -y mcp",
       "installKind": "package",
-      "category": "ai-agents",
+      "category": "other",
       "categories": [
-        "ai-agents"
+        "other"
       ],
       "status": "active",
       "publishedAt": "2026-08-16T00:26:01.880809Z",
@@ -14161,9 +14352,9 @@
       ],
       "installCommand": "SATRANK_API_BASE=<value> npx -y satrank-mcp@1.0.1",
       "installKind": "package",
-      "category": "ai-agents",
+      "category": "other",
       "categories": [
-        "ai-agents"
+        "other"
       ],
       "status": "active",
       "publishedAt": "2026-05-08T02:18:49.54232Z",
@@ -14645,6 +14836,55 @@
         "https://tidesman.dev/assets/apple-touch-icon.png"
       ],
       "iconUrl": "https://tidesman.dev/assets/tidesman-icon.svg"
+    },
+    {
+      "slug": "dev-tiltmeter-tiltmeter",
+      "name": "dev.tiltmeter/tiltmeter",
+      "title": "Tiltmeter",
+      "description": "Tells your agents when a third-party API they depend on changes shape, before they trust it.",
+      "version": "0.5.1",
+      "url": "https://tiltmeter.dev",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "pypi",
+          "identifier": "tiltmeter",
+          "transport": "stdio",
+          "version": "0.5.1",
+          "runtimeHint": "uvx",
+          "environmentVariables": [
+            {
+              "name": "TILTMETER_CONFIG",
+              "description": "Path to tiltmeter.yaml. Defaults to tiltmeter.yaml in the working directory."
+            },
+            {
+              "name": "ANTHROPIC_API_KEY",
+              "description": "Only needed for explanations written by Claude."
+            }
+          ],
+          "packageArguments": [
+            "serve"
+          ]
+        }
+      ],
+      "installCommand": "TILTMETER_CONFIG=<value> ANTHROPIC_API_KEY=<value> uvx tiltmeter@0.5.1 serve",
+      "installKind": "package",
+      "category": "ai-agents",
+      "categories": [
+        "ai-agents"
+      ],
+      "status": "active",
+      "publishedAt": "2026-10-25T17:05:44.459651Z",
+      "updatedAt": "2026-10-25T17:05:44.459651Z",
+      "websiteUrl": "https://tiltmeter.dev",
+      "repository": {
+        "url": "https://github.com/tiltmeter-dev/tiltmeter",
+        "source": "github"
+      },
+      "icons": [
+        "https://tiltmeter.dev/favicon.svg"
+      ],
+      "iconUrl": "https://tiltmeter.dev/favicon.svg"
     },
     {
       "slug": "dev-tinify-mcp",
@@ -16735,9 +16975,8 @@
       ],
       "installCommand": "OPENAI_API_KEY=<value> ANTHROPIC_API_KEY=<value> GEMINI_API_KEY=<value> PERPLEXITY_API_KEY=<value> XAI_API_KEY=<value> SERPAPI_API_KEY=<value> SERPAPI_AI_MODE_ENABLED=<value> npx -y @digestseo/mcp-geo@0.3.27",
       "installKind": "package",
-      "category": "ai-agents",
+      "category": "search",
       "categories": [
-        "ai-agents",
         "search",
         "marketing"
       ],
@@ -17382,6 +17621,48 @@
       "iconUrl": "https://raw.githubusercontent.com/Apegurus/web3agent/main/assets/logo.png"
     },
     {
+      "slug": "io-github-apollographql-apollo-mcp-server",
+      "name": "io.github.apollographql/apollo-mcp-server",
+      "title": "Apollo MCP Server",
+      "description": "MCP server that exposes GraphQL operations as tools for AI models.",
+      "version": "2.0.0",
+      "url": "https://www.apollographql.com/docs/apollo-mcp-server/",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "oci",
+          "identifier": "ghcr.io/apollographql/apollo-mcp-server:v2.0.0",
+          "transport": "stdio",
+          "packageArguments": [
+            "/config.yaml"
+          ],
+          "runtimeArguments": [
+            "type=bind,src={config_path},dst=/config.yaml,readonly",
+            "type=bind,src={data_path},dst=/data",
+            "8000:8000"
+          ]
+        }
+      ],
+      "installCommand": "docker run -i --rm ghcr.io/apollographql/apollo-mcp-server:v2.0.0 type=bind,src={config_path},dst=/config.yaml,readonly type=bind,src={data_path},dst=/data 8000:8000 /config.yaml",
+      "installKind": "package",
+      "category": "other",
+      "categories": [
+        "other"
+      ],
+      "status": "active",
+      "publishedAt": "2026-10-06T10:52:44.554363Z",
+      "updatedAt": "2026-10-06T10:52:44.554363Z",
+      "websiteUrl": "https://www.apollographql.com/docs/apollo-mcp-server/",
+      "repository": {
+        "url": "https://github.com/apollographql/apollo-mcp-server",
+        "source": "github"
+      },
+      "icons": [
+        "https://raw.githubusercontent.com/apollographql/apollo-client-devtools/main/assets/apollo-wordmark.svg"
+      ],
+      "iconUrl": "https://raw.githubusercontent.com/apollographql/apollo-client-devtools/main/assets/apollo-wordmark.svg"
+    },
+    {
       "slug": "io-github-apophisss-minion",
       "name": "io.github.Apophisss/minion",
       "title": "Minion",
@@ -17886,7 +18167,7 @@
       "name": "io.github.baccaraaa/tavero",
       "title": "Tavero",
       "description": "Finds UI drift in React apps (buttons, cards, colors, spacing) and gives your agent each fix",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "url": "https://taveroui.com",
       "remotes": [],
       "packages": [
@@ -17894,13 +18175,13 @@
           "registryType": "npm",
           "identifier": "tavero",
           "transport": "stdio",
-          "version": "0.6.0",
+          "version": "0.7.0",
           "packageArguments": [
             "mcp"
           ]
         }
       ],
-      "installCommand": "npx -y tavero@0.6.0 mcp",
+      "installCommand": "npx -y tavero@0.7.0 mcp",
       "installKind": "package",
       "category": "ai-agents",
       "categories": [
@@ -17908,8 +18189,8 @@
         "design"
       ],
       "status": "active",
-      "publishedAt": "2026-10-25T09:28:32.427731Z",
-      "updatedAt": "2026-10-25T09:28:32.427731Z",
+      "publishedAt": "2026-10-25T17:04:00.313489Z",
+      "updatedAt": "2026-10-25T17:04:00.313489Z",
       "websiteUrl": "https://taveroui.com",
       "repository": {
         "url": "https://github.com/baccaraaa/tavero",
@@ -18817,7 +19098,6 @@
       "category": "databases",
       "categories": [
         "databases",
-        "ai-agents",
         "security"
       ],
       "status": "active",
@@ -20109,6 +20389,79 @@
       "iconUrl": "https://raw.githubusercontent.com/ebmurha/odoo-mcp/main/assets/odoo-mcp-logo.png"
     },
     {
+      "slug": "io-github-ed-smartass-dbmole-mcp",
+      "name": "io.github.ed-smartass/dbmole-mcp",
+      "title": "dbmole",
+      "description": "PostgreSQL and MySQL with connections managed at runtime by the agent, SSH tunnels, readonly.",
+      "version": "0.2.0",
+      "url": "https://github.com/ed-smartass/dbmole-mcp",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "dbmole-mcp",
+          "transport": "stdio",
+          "version": "0.2.0",
+          "registryBaseUrl": "https://registry.npmjs.org"
+        }
+      ],
+      "installCommand": "npx -y dbmole-mcp@0.2.0",
+      "installKind": "package",
+      "category": "databases",
+      "categories": [
+        "databases",
+        "ai-agents"
+      ],
+      "status": "active",
+      "publishedAt": "2026-10-25T16:47:21.070346Z",
+      "updatedAt": "2026-10-25T16:47:21.070346Z",
+      "websiteUrl": "https://github.com/ed-smartass/dbmole-mcp",
+      "repository": {
+        "url": "https://github.com/ed-smartass/dbmole-mcp",
+        "source": "github"
+      },
+      "icons": [
+        "https://raw.githubusercontent.com/ed-smartass/dbmole-mcp/main/assets/dbmole-logo.png"
+      ],
+      "iconUrl": "https://raw.githubusercontent.com/ed-smartass/dbmole-mcp/main/assets/dbmole-logo.png"
+    },
+    {
+      "slug": "io-github-ed-smartass-esmole-mcp",
+      "name": "io.github.ed-smartass/esmole-mcp",
+      "title": "esmole",
+      "description": "Elasticsearch 7.x/8.x with connections managed at runtime by the agent, SSH tunnels, readonly.",
+      "version": "0.2.0",
+      "url": "https://github.com/ed-smartass/esmole-mcp",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "esmole-mcp",
+          "transport": "stdio",
+          "version": "0.2.0",
+          "registryBaseUrl": "https://registry.npmjs.org"
+        }
+      ],
+      "installCommand": "npx -y esmole-mcp@0.2.0",
+      "installKind": "package",
+      "category": "ai-agents",
+      "categories": [
+        "ai-agents"
+      ],
+      "status": "active",
+      "publishedAt": "2026-10-25T16:50:26.837899Z",
+      "updatedAt": "2026-10-25T16:50:26.837899Z",
+      "websiteUrl": "https://github.com/ed-smartass/esmole-mcp",
+      "repository": {
+        "url": "https://github.com/ed-smartass/esmole-mcp",
+        "source": "github"
+      },
+      "icons": [
+        "https://raw.githubusercontent.com/ed-smartass/esmole-mcp/main/assets/esmole-logo.png"
+      ],
+      "iconUrl": "https://raw.githubusercontent.com/ed-smartass/esmole-mcp/main/assets/esmole-logo.png"
+    },
+    {
       "slug": "io-github-edelciomolina-postgres-mcp",
       "name": "io.github.edelciomolina/postgres-mcp",
       "title": "Postgres MCP",
@@ -20334,6 +20687,46 @@
         "https://prompts.chat/logo.svg"
       ],
       "iconUrl": "https://prompts.chat/logo.svg"
+    },
+    {
+      "slug": "io-github-fauguste-boondmanager-mcp-server",
+      "name": "io.github.fauguste/boondmanager-mcp-server",
+      "title": "BoondManager MCP Server",
+      "description": "MCP Server for BoondManager API - 182 tools, 12 prompts, 22 resources (ERP/CRM)",
+      "version": "2.15.2",
+      "url": "https://github.com/fauguste/boondmanager-mcp-server",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "boondmanager-mcp-server",
+          "transport": "stdio",
+          "version": "2.15.2"
+        },
+        {
+          "registryType": "mcpb",
+          "identifier": "https://github.com/fauguste/boondmanager-mcp-server/releases/download/v2.15.2/boondmanager-mcp-server-v2.15.2.mcpb",
+          "transport": "stdio"
+        }
+      ],
+      "installCommand": "npx -y boondmanager-mcp-server@2.15.2",
+      "installKind": "package",
+      "category": "crm-sales",
+      "categories": [
+        "crm-sales"
+      ],
+      "status": "active",
+      "publishedAt": "2026-09-20T10:22:32.584856Z",
+      "updatedAt": "2026-09-20T10:22:32.584856Z",
+      "websiteUrl": "https://github.com/fauguste/boondmanager-mcp-server",
+      "repository": {
+        "url": "https://github.com/fauguste/boondmanager-mcp-server",
+        "source": "github"
+      },
+      "icons": [
+        "https://raw.githubusercontent.com/fauguste/boondmanager-mcp-server/main/icon.png"
+      ],
+      "iconUrl": "https://raw.githubusercontent.com/fauguste/boondmanager-mcp-server/main/icon.png"
     },
     {
       "slug": "io-github-faviovazquez-showtime",
@@ -20566,6 +20959,63 @@
       "iconUrl": "https://raw.githubusercontent.com/flumpiey/linkwarden-mcp/main/docs/icon-512.png"
     },
     {
+      "slug": "io-github-flumpiey-manager-mcp",
+      "name": "io.github.flumpiey/manager-mcp",
+      "title": "Manager.io MCP",
+      "description": "MCP server for Manager.io bookkeeping: read-first with opt-in scoped task and write tools",
+      "version": "0.2.6",
+      "url": "https://github.com/flumpiey/manager-mcp",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "pypi",
+          "identifier": "manager-mcp",
+          "transport": "stdio",
+          "version": "0.2.6",
+          "runtimeHint": "uvx",
+          "environmentVariables": [
+            {
+              "name": "MANAGER_API_URL",
+              "description": "Manager API base URL (include /api2 when required)",
+              "required": true
+            },
+            {
+              "name": "MANAGER_API_KEY",
+              "description": "Access token from Manager Settings (sent as X-API-KEY)",
+              "required": true
+            },
+            {
+              "name": "MANAGER_MCP_WRITE_SCOPES",
+              "description": "Comma-separated write scopes: quotes,orders,parties,items,sales,purchases,banking,payroll,ledger,raw. Recommended: banking,sales,parties"
+            },
+            {
+              "name": "MANAGER_MCP_DELETE_SCOPES",
+              "description": "Comma-separated delete scopes (never implied by write scopes)"
+            }
+          ],
+          "registryBaseUrl": "https://pypi.org"
+        }
+      ],
+      "installCommand": "MANAGER_API_URL=<value> MANAGER_API_KEY=<value> MANAGER_MCP_WRITE_SCOPES=<value> MANAGER_MCP_DELETE_SCOPES=<value> uvx manager-mcp@0.2.6",
+      "installKind": "package",
+      "category": "productivity",
+      "categories": [
+        "productivity"
+      ],
+      "status": "active",
+      "publishedAt": "2026-08-03T21:36:35.653249Z",
+      "updatedAt": "2026-08-03T21:36:35.653249Z",
+      "websiteUrl": "https://github.com/flumpiey/manager-mcp",
+      "repository": {
+        "url": "https://github.com/flumpiey/manager-mcp",
+        "source": "github"
+      },
+      "icons": [
+        "https://raw.githubusercontent.com/flumpiey/manager-mcp/main/src/manager_mcp/assets/icon.png"
+      ],
+      "iconUrl": "https://raw.githubusercontent.com/flumpiey/manager-mcp/main/src/manager_mcp/assets/icon.png"
+    },
+    {
       "slug": "io-github-fmadore-frederickmadore-website",
       "name": "io.github.fmadore/frederickmadore-website",
       "title": "Frédérick Madore — Academic Record",
@@ -20599,6 +21049,43 @@
         "https://www.frederickmadore.com/icons/icon-512.png"
       ],
       "iconUrl": "https://www.frederickmadore.com/icons/icon-512.png"
+    },
+    {
+      "slug": "io-github-forever-healthy-evipedia-mcp",
+      "name": "io.github.forever-healthy/evipedia-mcp",
+      "title": "Evipedia",
+      "description": "MCP Server for evipedia.ai — evidence-based reviews of health & longevity interventions",
+      "version": "0.1.30",
+      "url": "https://evipedia.ai",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "evipedia-mcp",
+          "transport": "stdio",
+          "version": "0.1.30"
+        }
+      ],
+      "installCommand": "npx -y evipedia-mcp@0.1.30",
+      "installKind": "package",
+      "category": "other",
+      "categories": [
+        "other"
+      ],
+      "status": "active",
+      "publishedAt": "2026-09-09T12:47:47.472148Z",
+      "updatedAt": "2026-09-09T12:47:47.472148Z",
+      "websiteUrl": "https://evipedia.ai",
+      "repository": {
+        "url": "https://github.com/forever-healthy/evipedia-mcp",
+        "source": "github"
+      },
+      "icons": [
+        "https://evipedia.ai/assets/favicon.svg",
+        "https://evipedia.ai/assets/favicon-192.png",
+        "https://evipedia.ai/assets/favicon-512.png"
+      ],
+      "iconUrl": "https://evipedia.ai/assets/favicon.svg"
     },
     {
       "slug": "io-github-forgemeshlabs-library-mcp",
@@ -22110,6 +22597,41 @@
       "iconUrl": "https://raw.githubusercontent.com/iksnerd/adb-mcp/main/assets/android-head_flat.svg"
     },
     {
+      "slug": "io-github-imattau-polypack-mcp",
+      "name": "io.github.imattau/polypack-mcp",
+      "title": "Polypack Memory",
+      "description": "MCP server exposing Polypack as persistent adaptive memory",
+      "version": "0.1.31",
+      "url": "https://github.com/imattau/polypack-mcp",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "pypi",
+          "identifier": "polypack-mcp",
+          "transport": "stdio",
+          "version": "0.1.31"
+        }
+      ],
+      "installCommand": "uvx polypack-mcp@0.1.31",
+      "installKind": "package",
+      "category": "ai-agents",
+      "categories": [
+        "ai-agents"
+      ],
+      "status": "active",
+      "publishedAt": "2026-09-06T05:30:49.673429Z",
+      "updatedAt": "2026-09-06T05:30:49.673429Z",
+      "repository": {
+        "url": "https://github.com/imattau/polypack-mcp",
+        "source": "github"
+      },
+      "icons": [
+        "https://raw.githubusercontent.com/imattau/polypack-mcp/master/docs/assets/logo-mark.svg",
+        "https://raw.githubusercontent.com/imattau/polypack-mcp/master/docs/assets/logo-mark-dark.svg"
+      ],
+      "iconUrl": "https://raw.githubusercontent.com/imattau/polypack-mcp/master/docs/assets/logo-mark.svg"
+    },
+    {
       "slug": "io-github-imshaikot-browsentic",
       "name": "io.github.imshaikot/browsentic",
       "title": "Browsentic",
@@ -22833,6 +23355,73 @@
         "https://raw.githubusercontent.com/janpuc/koment/main/internal/ui/assets/koment-logo.png"
       ],
       "iconUrl": "https://raw.githubusercontent.com/janpuc/koment/main/internal/ui/assets/koment-logo.png"
+    },
+    {
+      "slug": "io-github-jarahkon-hass-mcp-server",
+      "name": "io.github.jarahkon/hass-mcp-server",
+      "title": "Home Assistant MCP Server",
+      "description": "MCP server for full Home Assistant control — dashboards, files, automations, add-ons, and more",
+      "version": "1.0.6",
+      "url": "https://github.com/jarahkon/hass-mcp-server",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "@jarahkon/hass-mcp-server",
+          "transport": "stdio",
+          "version": "1.0.6",
+          "environmentVariables": [
+            {
+              "name": "HA_URL",
+              "description": "Home Assistant base URL (e.g. http://homeassistant.local:8123)",
+              "required": true
+            },
+            {
+              "name": "HA_TOKEN",
+              "description": "Home Assistant long-lived access token",
+              "required": true
+            },
+            {
+              "name": "HA_SSH_HOST",
+              "description": "SSH hostname for file management (optional)"
+            },
+            {
+              "name": "HA_SSH_PORT",
+              "description": "SSH port (default: 22)"
+            },
+            {
+              "name": "HA_SSH_USER",
+              "description": "SSH username (must be root)"
+            },
+            {
+              "name": "HA_SSH_KEY_PATH",
+              "description": "Path to SSH private key"
+            },
+            {
+              "name": "HA_SSH_PASSWORD",
+              "description": "SSH password (alternative to key)"
+            }
+          ]
+        }
+      ],
+      "installCommand": "HA_URL=<value> HA_TOKEN=<value> HA_SSH_HOST=<value> HA_SSH_PORT=<value> HA_SSH_USER=<value> HA_SSH_KEY_PATH=<value> HA_SSH_PASSWORD=<value> npx -y @jarahkon/hass-mcp-server@1.0.6",
+      "installKind": "package",
+      "category": "other",
+      "categories": [
+        "other"
+      ],
+      "status": "active",
+      "publishedAt": "2026-03-25T15:28:34.876203Z",
+      "updatedAt": "2026-03-25T15:28:34.876203Z",
+      "websiteUrl": "https://github.com/jarahkon/hass-mcp-server",
+      "repository": {
+        "url": "https://github.com/jarahkon/hass-mcp-server",
+        "source": "github"
+      },
+      "icons": [
+        "https://raw.githubusercontent.com/jarahkon/hass-mcp-server/main/icon.png"
+      ],
+      "iconUrl": "https://raw.githubusercontent.com/jarahkon/hass-mcp-server/main/icon.png"
     },
     {
       "slug": "io-github-jcooley8-pincushion",
@@ -23619,6 +24208,49 @@
       "iconUrl": "https://raw.githubusercontent.com/Krv-Labs/topos/main/extensions/vscode/icon.png"
     },
     {
+      "slug": "io-github-l10n-dev-ai-l10n-mcp",
+      "name": "io.github.l10n-dev/ai-l10n-mcp",
+      "title": "L10n.dev - AI Localization Agent",
+      "description": "MCP Server that turns your AI agent into a localization expert with token-efficient i18n translation",
+      "version": "1.2.0",
+      "url": "https://l10n.dev",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "ai-l10n-mcp",
+          "transport": "stdio",
+          "version": "1.2.0",
+          "environmentVariables": [
+            {
+              "name": "YOUR_API_KEY",
+              "description": "Your API key for the service"
+            }
+          ]
+        }
+      ],
+      "installCommand": "YOUR_API_KEY=<value> npx -y ai-l10n-mcp@1.2.0",
+      "installKind": "package",
+      "category": "ai-agents",
+      "categories": [
+        "ai-agents"
+      ],
+      "status": "active",
+      "publishedAt": "2026-08-13T15:01:28.235958Z",
+      "updatedAt": "2026-08-13T15:01:28.235958Z",
+      "websiteUrl": "https://l10n.dev",
+      "repository": {
+        "url": "https://github.com/l10n-dev/ai-l10n",
+        "source": "github"
+      },
+      "icons": [
+        "https://l10n.dev/favicon.svg",
+        "https://l10n.dev/favicon-96x96.png",
+        "https://l10n.dev/apple-touch-icon.png"
+      ],
+      "iconUrl": "https://l10n.dev/favicon.svg"
+    },
+    {
       "slug": "io-github-lantean-code-roslyn-workbench-mcp",
       "name": "io.github.lantean-code/roslyn-workbench-mcp",
       "title": "Roslyn Workbench MCP",
@@ -23945,6 +24577,42 @@
         "https://github.com/llamalox/eyescope-mcp/releases/download/v0.1.2/icon.png"
       ],
       "iconUrl": "https://github.com/llamalox/eyescope-mcp/releases/download/v0.1.2/icon.png"
+    },
+    {
+      "slug": "io-github-localfoundry-search-rotation",
+      "name": "io.github.localfoundry/search-rotation",
+      "title": "search-rotation",
+      "description": "MCP server for web search and page extraction across the free tiers of several providers",
+      "version": "0.4.10",
+      "url": "https://github.com/localfoundry/search-rotation-mcp",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "search-rotation",
+          "transport": "stdio",
+          "version": "0.4.10"
+        }
+      ],
+      "installCommand": "npx -y search-rotation@0.4.10",
+      "installKind": "package",
+      "category": "search",
+      "categories": [
+        "search"
+      ],
+      "status": "active",
+      "publishedAt": "2026-09-26T13:49:37.380126Z",
+      "updatedAt": "2026-09-26T13:49:37.380126Z",
+      "repository": {
+        "url": "https://github.com/localfoundry/search-rotation-mcp",
+        "source": "github",
+        "id": "1357478105"
+      },
+      "icons": [
+        "https://raw.githubusercontent.com/localfoundry/search-rotation-mcp/main/docs/assets/brand/icon-light-512.png",
+        "https://raw.githubusercontent.com/localfoundry/search-rotation-mcp/main/docs/assets/brand/icon-dark-512.png"
+      ],
+      "iconUrl": "https://raw.githubusercontent.com/localfoundry/search-rotation-mcp/main/docs/assets/brand/icon-light-512.png"
     },
     {
       "slug": "io-github-log-10x-log10x-mcp",
@@ -25660,6 +26328,44 @@
       "iconUrl": "https://oaslananka.github.io/kicad-mcp-pro/assets/icon-512.png"
     },
     {
+      "slug": "io-github-oito2-mcp-build82",
+      "name": "io.github.oito2/mcp-build82",
+      "title": "build82",
+      "description": "MCP server for Moodle plugin development: structural context of a Moodle install for AI agents.",
+      "version": "1.1.0",
+      "url": "https://github.com/oito2/mcp-build82",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "mcpb",
+          "identifier": "https://github.com/oito2/mcp-build82/releases/download/v1.1.0/build82.mcpb",
+          "transport": "stdio",
+          "version": "1.1.0"
+        }
+      ],
+      "installCommand": "mcpb install https://github.com/oito2/mcp-build82/releases/download/v1.1.0/build82.mcpb",
+      "installKind": "package",
+      "category": "ai-agents",
+      "categories": [
+        "ai-agents"
+      ],
+      "status": "active",
+      "publishedAt": "2026-10-09T14:23:42.296096Z",
+      "updatedAt": "2026-10-09T14:23:42.296096Z",
+      "websiteUrl": "https://github.com/oito2/mcp-build82",
+      "repository": {
+        "url": "https://github.com/oito2/mcp-build82",
+        "source": "github"
+      },
+      "icons": [
+        "https://raw.githubusercontent.com/oito2/mcp-build82/v1.1.0/docs/img/icons/icon-build82-64.png",
+        "https://raw.githubusercontent.com/oito2/mcp-build82/v1.1.0/docs/img/icons/icon-build82-128.png",
+        "https://raw.githubusercontent.com/oito2/mcp-build82/v1.1.0/docs/img/icons/icon-build82-256.png",
+        "https://raw.githubusercontent.com/oito2/mcp-build82/v1.1.0/docs/img/icons/icon-build82-512.png"
+      ],
+      "iconUrl": "https://raw.githubusercontent.com/oito2/mcp-build82/v1.1.0/docs/img/icons/icon-build82-64.png"
+    },
+    {
       "slug": "io-github-oito2-mcp-sync82",
       "name": "io.github.oito2/mcp-sync82",
       "title": "sync82",
@@ -26163,6 +26869,51 @@
         "https://analytics.dugganusa.com/jeevesus-icon.svg"
       ],
       "iconUrl": "https://analytics.dugganusa.com/jeevesus-icon.svg"
+    },
+    {
+      "slug": "io-github-pilat-mcp-datalink",
+      "name": "io.github.pilat/mcp-datalink",
+      "title": "DataLink",
+      "description": "MCP server for secure database access (PostgreSQL, MySQL, SQLite)",
+      "version": "1.2.4",
+      "url": "https://github.com/pilat/mcp-datalink",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "@pilat/mcp-datalink",
+          "transport": "stdio",
+          "version": "1.2.4",
+          "environmentVariables": [
+            {
+              "name": "DATALINK_ANALYTICS_URL",
+              "description": "Database connection URL. Pattern: DATALINK_<NAME>_URL where <NAME> identifies the database. Supports postgresql://, mysql://, or file path for SQLite.",
+              "required": true
+            },
+            {
+              "name": "DATALINK_ANALYTICS_READONLY",
+              "description": "Set to 'true' for read-only access. Pattern: DATALINK_<NAME>_READONLY"
+            }
+          ]
+        }
+      ],
+      "installCommand": "DATALINK_ANALYTICS_URL=<value> DATALINK_ANALYTICS_READONLY=<value> npx -y @pilat/mcp-datalink@1.2.4",
+      "installKind": "package",
+      "category": "databases",
+      "categories": [
+        "databases"
+      ],
+      "status": "active",
+      "publishedAt": "2026-01-04T18:09:13.857862Z",
+      "updatedAt": "2026-01-04T18:09:13.857862Z",
+      "repository": {
+        "url": "https://github.com/pilat/mcp-datalink",
+        "source": "github"
+      },
+      "icons": [
+        "https://raw.githubusercontent.com/pilat/mcp-datalink/main/logo.png"
+      ],
+      "iconUrl": "https://raw.githubusercontent.com/pilat/mcp-datalink/main/logo.png"
     },
     {
       "slug": "io-github-pramodreddyboddu-mq-sentinel",
@@ -26900,6 +27651,61 @@
       "iconUrl": "https://raw.githubusercontent.com/roystondwork-dev/portcheck/main/extensions/vscode/media/icon.png"
     },
     {
+      "slug": "io-github-rrvrs-jira-alerts-mcp",
+      "name": "io.github.rrvrs/jira-alerts-mcp",
+      "title": "Jira Alerts (JSM Operations)",
+      "description": "MCP server for Jira Service Management Operations — alerts, on-call schedules and responders",
+      "version": "2.1.1",
+      "url": "https://github.com/rrvrs/jira-alerts-mcp#readme",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "jira-alerts-mcp",
+          "transport": "stdio",
+          "version": "2.1.1",
+          "environmentVariables": [
+            {
+              "name": "JSM_CLOUD_ID",
+              "description": "Atlassian site cloud id (a UUID). Find it at https://<your-site>.atlassian.net/_edge/tenant_info",
+              "required": true
+            },
+            {
+              "name": "JSM_EMAIL",
+              "description": "Atlassian account email, for API token auth. Required unless JSM_OAUTH_TOKEN is set."
+            },
+            {
+              "name": "JSM_API_TOKEN",
+              "description": "Atlassian account API token, paired with JSM_EMAIL. Required unless JSM_OAUTH_TOKEN is set."
+            },
+            {
+              "name": "JSM_OAUTH_TOKEN",
+              "description": "OAuth 3LO or Forge bearer token. Takes precedence over JSM_EMAIL and JSM_API_TOKEN."
+            }
+          ]
+        }
+      ],
+      "installCommand": "JSM_CLOUD_ID=<value> JSM_EMAIL=<value> JSM_API_TOKEN=<value> JSM_OAUTH_TOKEN=<value> npx -y jira-alerts-mcp@2.1.1",
+      "installKind": "package",
+      "category": "productivity",
+      "categories": [
+        "productivity"
+      ],
+      "status": "active",
+      "publishedAt": "2026-10-24T17:55:54.022984Z",
+      "updatedAt": "2026-10-24T17:55:54.022984Z",
+      "websiteUrl": "https://github.com/rrvrs/jira-alerts-mcp#readme",
+      "repository": {
+        "url": "https://github.com/rrvrs/jira-alerts-mcp",
+        "source": "github"
+      },
+      "icons": [
+        "https://raw.githubusercontent.com/rrvrs/jira-alerts-mcp/main/docs/logo.png",
+        "https://raw.githubusercontent.com/rrvrs/jira-alerts-mcp/main/docs/logo.svg"
+      ],
+      "iconUrl": "https://raw.githubusercontent.com/rrvrs/jira-alerts-mcp/main/docs/logo.png"
+    },
+    {
       "slug": "io-github-rstreamlabs-rstream",
       "name": "io.github.rstreamlabs/rstream",
       "title": "rstream CLI MCP",
@@ -27596,6 +28402,59 @@
       "iconUrl": "https://www.prismhq.in/brand/prism-mark.png"
     },
     {
+      "slug": "io-github-shane-js-ghostfree",
+      "name": "io.github.shane-js/ghostfree",
+      "title": "GhostFree",
+      "description": "MCP server that scans your repo's dependencies for security vulnerabilities based on published CVEs.",
+      "version": "0.2.0",
+      "url": "https://github.com/shane-js/ghostfree#readme",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "ghostfree",
+          "transport": "stdio",
+          "version": "0.2.0",
+          "runtimeHint": "npx",
+          "environmentVariables": [
+            {
+              "name": "GHOSTFREE_DIR",
+              "description": "Override the directory where GhostFree stores its data files (accepted-risks.yml, config.yml). Defaults to .ghostfree/ in the scanned repository root."
+            },
+            {
+              "name": "GHOSTFREE_MIN_SEVERITY",
+              "description": "Minimum CVE severity level to surface. One of: CRITICAL, HIGH, MEDIUM (default), LOW."
+            },
+            {
+              "name": "NVD_API_KEY",
+              "description": "Optional NVD API key for higher rate limits when enriching CVE details. Free to request at https://nvd.nist.gov/developers/request-an-api-key."
+            }
+          ],
+          "runtimeArguments": [
+            "-y"
+          ]
+        }
+      ],
+      "installCommand": "GHOSTFREE_DIR=<value> GHOSTFREE_MIN_SEVERITY=<value> NVD_API_KEY=<value> npx ghostfree@0.2.0 -y",
+      "installKind": "package",
+      "category": "security",
+      "categories": [
+        "security"
+      ],
+      "status": "active",
+      "publishedAt": "2026-04-07T01:48:43.139412Z",
+      "updatedAt": "2026-04-07T01:48:43.139412Z",
+      "websiteUrl": "https://github.com/shane-js/ghostfree#readme",
+      "repository": {
+        "url": "https://github.com/shane-js/ghostfree",
+        "source": "github"
+      },
+      "icons": [
+        "https://raw.githubusercontent.com/shane-js/ghostfree/main/icon.png"
+      ],
+      "iconUrl": "https://raw.githubusercontent.com/shane-js/ghostfree/main/icon.png"
+    },
+    {
       "slug": "io-github-sidinsearch-bugproof",
       "name": "io.github.sidinsearch/bugproof",
       "title": "BugProof",
@@ -27629,6 +28488,46 @@
         "https://raw.githubusercontent.com/sidinsearch/BugProof/main/assets/icon-512x512.png"
       ],
       "iconUrl": "https://raw.githubusercontent.com/sidinsearch/BugProof/main/assets/icon-512x512.png"
+    },
+    {
+      "slug": "io-github-silamir-boondmanager-mcp-server",
+      "name": "io.github.silamir/boondmanager-mcp-server",
+      "title": "BoondManager MCP Server",
+      "description": "MCP Server for BoondManager API - 185 tools, 13 prompts, 22 resources (ERP/CRM)",
+      "version": "2.19.2",
+      "url": "https://github.com/silamir/boondmanager-mcp-server",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "boondmanager-mcp-server",
+          "transport": "stdio",
+          "version": "2.19.2"
+        },
+        {
+          "registryType": "mcpb",
+          "identifier": "https://github.com/silamir/boondmanager-mcp-server/releases/download/v2.19.2/boondmanager-mcp-server-v2.19.2.mcpb",
+          "transport": "stdio"
+        }
+      ],
+      "installCommand": "npx -y boondmanager-mcp-server@2.19.2",
+      "installKind": "package",
+      "category": "crm-sales",
+      "categories": [
+        "crm-sales"
+      ],
+      "status": "active",
+      "publishedAt": "2026-10-25T15:19:12.611172Z",
+      "updatedAt": "2026-10-25T15:19:12.611172Z",
+      "websiteUrl": "https://github.com/silamir/boondmanager-mcp-server",
+      "repository": {
+        "url": "https://github.com/silamir/boondmanager-mcp-server",
+        "source": "github"
+      },
+      "icons": [
+        "https://raw.githubusercontent.com/silamir/boondmanager-mcp-server/main/icon.png"
+      ],
+      "iconUrl": "https://raw.githubusercontent.com/silamir/boondmanager-mcp-server/main/icon.png"
     },
     {
       "slug": "io-github-silbercue-public-browser",
@@ -28045,6 +28944,41 @@
         "https://raw.githubusercontent.com/space-bacon/blackwindow-weave-mcp/v0.1.2/icon.png"
       ],
       "iconUrl": "https://raw.githubusercontent.com/space-bacon/blackwindow-weave-mcp/v0.1.2/icon.png"
+    },
+    {
+      "slug": "io-github-sreeramkongeseri-tablafocus-mcp",
+      "name": "io.github.sreeramkongeseri/tablafocus-mcp",
+      "title": "TablaFocusMCP",
+      "description": "MCP server for tabla learning: glossary, taals, composition, practice coaching, certification prep.",
+      "version": "0.1.1",
+      "url": "https://www.tablafocus.com/mcp",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "tablafocus-mcp",
+          "transport": "stdio",
+          "version": "0.1.1"
+        }
+      ],
+      "installCommand": "npx -y tablafocus-mcp@0.1.1",
+      "installKind": "package",
+      "category": "other",
+      "categories": [
+        "other"
+      ],
+      "status": "active",
+      "publishedAt": "2026-03-04T18:13:27.923017Z",
+      "updatedAt": "2026-03-04T18:13:27.923017Z",
+      "websiteUrl": "https://www.tablafocus.com/mcp",
+      "repository": {
+        "url": "https://github.com/sreeramkongeseri/TablaFocusMCP",
+        "source": "github"
+      },
+      "icons": [
+        "https://raw.githubusercontent.com/sreeramkongeseri/TablaFocusMCP/main/assets/tablafocus-mcp-icon.svg"
+      ],
+      "iconUrl": "https://raw.githubusercontent.com/sreeramkongeseri/TablaFocusMCP/main/assets/tablafocus-mcp-icon.svg"
     },
     {
       "slug": "io-github-stcmain-whats-allowed-mcp",
@@ -28778,9 +29712,8 @@
       ],
       "installCommand": "mcpb install https://github.com/tnvolman/jd-church-website-audit/releases/download/v1.0.1/jd-church-website-audit.mcpb",
       "installKind": "package",
-      "category": "ai-agents",
+      "category": "marketing",
       "categories": [
-        "ai-agents",
         "marketing"
       ],
       "status": "active",
@@ -31214,6 +32147,49 @@
       }
     },
     {
+      "slug": "io-tesseraai-mcp-server",
+      "name": "io.tesseraai/mcp-server",
+      "title": "Tessera MCP Server",
+      "description": "MCP server for Tessera's LLM cost-optimization layer: anchored spend, drift, recommendations.",
+      "version": "0.1.2",
+      "url": "https://tesseraai.io/dev",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "@tessera-llm/mcp-server",
+          "transport": "stdio",
+          "version": "0.1.2",
+          "runtimeHint": "npx",
+          "environmentVariables": [
+            {
+              "name": "TESSERA_API_KEY",
+              "description": "API key in tk_* format. Get one free at https://tesseraai.io/dev.",
+              "required": true
+            },
+            {
+              "name": "TESSERA_UPSTREAM_API_BASE_URL",
+              "description": "Override only for staging or local-dev testing."
+            }
+          ]
+        }
+      ],
+      "installCommand": "TESSERA_API_KEY=<value> TESSERA_UPSTREAM_API_BASE_URL=<value> npx @tessera-llm/mcp-server@0.1.2",
+      "installKind": "package",
+      "category": "ai-llm",
+      "categories": [
+        "ai-llm"
+      ],
+      "status": "active",
+      "publishedAt": "2026-05-27T13:08:25.126872Z",
+      "updatedAt": "2026-05-27T13:08:25.126872Z",
+      "websiteUrl": "https://tesseraai.io/dev",
+      "repository": {
+        "url": "https://github.com/tessera-llm/mcp-server",
+        "source": "github"
+      }
+    },
+    {
       "slug": "io-traql-mcp-server",
       "name": "io.traql/mcp-server",
       "title": "traql",
@@ -31945,8 +32921,7 @@
       "installKind": "package",
       "category": "communication",
       "categories": [
-        "communication",
-        "ai-agents"
+        "communication"
       ],
       "status": "active",
       "publishedAt": "2026-08-13T00:25:13.937332Z",
@@ -33642,34 +34617,134 @@
       }
     },
     {
-      "slug": "tech-thecompound-blockdex",
-      "name": "tech.thecompound/blockdex",
-      "title": "BlockDex MCP",
-      "description": "BlockDex: Search shadcn-compatible components across public registries.",
-      "version": "0.1.0",
-      "url": "https://blockdex.thecompound.tech",
+      "slug": "tech-thecompound-openlookup",
+      "name": "tech.thecompound/openlookup",
+      "title": "OpenLookup",
+      "description": "OpenLookup: eleven keyless lookups. Model pricing, dep health, stack cost, registries.",
+      "version": "0.5.1",
+      "url": "https://thecompound.tech",
       "remotes": [],
       "packages": [
         {
           "registryType": "npm",
-          "identifier": "blockdex-mcp",
+          "identifier": "openlookup",
           "transport": "stdio",
-          "version": "0.1.0",
+          "version": "0.5.1",
           "registryBaseUrl": "https://registry.npmjs.org"
         }
       ],
-      "installCommand": "npx -y blockdex-mcp@0.1.0",
+      "installCommand": "npx -y openlookup@0.5.1",
       "installKind": "package",
-      "category": "search",
+      "category": "ai-llm",
       "categories": [
-        "search"
+        "ai-llm"
       ],
       "status": "active",
-      "publishedAt": "2026-10-05T11:33:25.418146Z",
-      "updatedAt": "2026-10-05T11:33:25.418146Z",
-      "websiteUrl": "https://blockdex.thecompound.tech",
+      "publishedAt": "2026-10-02T14:38:36.459883Z",
+      "updatedAt": "2026-10-02T14:38:36.459883Z",
+      "websiteUrl": "https://thecompound.tech",
       "repository": {
         "url": "https://github.com/kyisaiah47/openlookup",
+        "source": "github",
+        "id": "1319253480"
+      },
+      "icons": [
+        "https://raw.githubusercontent.com/kyisaiah47/openlookup/main/assets/openlookup-400.png"
+      ],
+      "iconUrl": "https://raw.githubusercontent.com/kyisaiah47/openlookup/main/assets/openlookup-400.png"
+    },
+    {
+      "slug": "tv-tootie-gotify-mcp",
+      "name": "tv.tootie/gotify-mcp",
+      "title": "Gotify MCP",
+      "description": "MCP server for self-hosted Gotify push notifications and message management.",
+      "version": "0.3.1",
+      "url": "https://github.com/jmagar/gotify-mcp",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "pypi",
+          "identifier": "gotify-mcp",
+          "transport": "stdio",
+          "version": "0.3.1",
+          "runtimeHint": "uvx",
+          "environmentVariables": [
+            {
+              "name": "GOTIFY_URL",
+              "description": "Base URL of your Gotify server, e.g. https://gotify.example.com. No trailing slash.",
+              "required": true
+            },
+            {
+              "name": "GOTIFY_APP_TOKEN",
+              "description": "Gotify application token for sending messages (Settings > Apps > Create Application)."
+            },
+            {
+              "name": "GOTIFY_CLIENT_TOKEN",
+              "description": "Gotify client token for management operations (Settings > Clients)."
+            },
+            {
+              "name": "GOTIFY_MCP_TRANSPORT",
+              "description": "Set to 'stdio' when running as a local subprocess. Default is 'http' for container deployments."
+            }
+          ],
+          "registryBaseUrl": "https://pypi.org"
+        }
+      ],
+      "installCommand": "GOTIFY_URL=<value> GOTIFY_APP_TOKEN=<value> GOTIFY_CLIENT_TOKEN=<value> GOTIFY_MCP_TRANSPORT=<value> uvx gotify-mcp@0.3.1",
+      "installKind": "package",
+      "category": "other",
+      "categories": [
+        "other"
+      ],
+      "status": "active",
+      "publishedAt": "2026-04-04T06:32:24.944401Z",
+      "updatedAt": "2026-04-04T06:32:24.944401Z",
+      "repository": {
+        "url": "https://github.com/jmagar/gotify-mcp",
+        "source": "github"
+      }
+    },
+    {
+      "slug": "tv-tootie-overseerr-mcp",
+      "name": "tv.tootie/overseerr-mcp",
+      "title": "Overseerr MCP",
+      "description": "MCP server for Overseerr media requests and discovery.",
+      "version": "1.0.1",
+      "url": "https://github.com/jmagar/overseerr-mcp",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "pypi",
+          "identifier": "overseerr-mcp",
+          "transport": "stdio",
+          "version": "1.0.1",
+          "runtimeHint": "uvx",
+          "environmentVariables": [
+            {
+              "name": "OVERSEERR_URL",
+              "description": "Base URL of your Overseerr instance, e.g. https://overseerr.example.com.",
+              "required": true
+            },
+            {
+              "name": "OVERSEERR_API_KEY",
+              "description": "Overseerr API key (Settings > General > API Key).",
+              "required": true
+            }
+          ],
+          "registryBaseUrl": "https://pypi.org"
+        }
+      ],
+      "installCommand": "OVERSEERR_URL=<value> OVERSEERR_API_KEY=<value> uvx overseerr-mcp@1.0.1",
+      "installKind": "package",
+      "category": "media",
+      "categories": [
+        "media"
+      ],
+      "status": "active",
+      "publishedAt": "2026-04-04T11:10:18.131869Z",
+      "updatedAt": "2026-04-04T11:10:18.131869Z",
+      "repository": {
+        "url": "https://github.com/jmagar/overseerr-mcp",
         "source": "github"
       }
     },
@@ -33898,6 +34973,48 @@
       }
     },
     {
+      "slug": "world-pit-pit",
+      "name": "world.pit/pit",
+      "title": "pit.world MCP server",
+      "description": "MCP server for private web search (no API key) and Moshpit name lookups. No logs, no cookies.",
+      "version": "0.5.0",
+      "url": "https://pit.world",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "pitworld",
+          "transport": "stdio",
+          "version": "0.5.0",
+          "runtimeHint": "bunx",
+          "environmentVariables": [
+            {
+              "name": "PIT_URL",
+              "description": "pit.world instance to query (default https://pit.world)"
+            }
+          ],
+          "packageArguments": [
+            "mcp"
+          ],
+          "registryBaseUrl": "https://registry.npmjs.org"
+        }
+      ],
+      "installCommand": "PIT_URL=<value> bunx pitworld@0.5.0 mcp",
+      "installKind": "package",
+      "category": "search",
+      "categories": [
+        "search"
+      ],
+      "status": "active",
+      "publishedAt": "2026-10-17T21:41:28.436202Z",
+      "updatedAt": "2026-10-17T21:41:28.436202Z",
+      "websiteUrl": "https://pit.world",
+      "repository": {
+        "url": "https://github.com/moshcoder/pit.world",
+        "source": "github"
+      }
+    },
+    {
       "slug": "xyz-atlasfetch-atlasfetch",
       "name": "xyz.atlasfetch/atlasfetch",
       "title": "AtlasFetch",
@@ -33931,6 +35048,40 @@
       "websiteUrl": "https://atlasfetch.xyz",
       "repository": {
         "url": "https://github.com/atlasfetch-dev/atlasfetch-mcp",
+        "source": "github"
+      }
+    },
+    {
+      "slug": "xyz-goldbean-api-goldbean-mcp",
+      "name": "xyz.goldbean-api/goldbean-mcp",
+      "title": "GoldBean MCP Server",
+      "description": "49 pay-per-use APIs for AI agents via x402. AI, crypto, DeFi, blockchain, weather, search, security.",
+      "version": "0.3.3",
+      "url": "https://goldbean-api.xyz",
+      "remotes": [],
+      "packages": [
+        {
+          "registryType": "npm",
+          "identifier": "goldbean-mcp",
+          "transport": "stdio",
+          "version": "0.3.3",
+          "runtimeHint": "npx -y goldbean-mcp"
+        }
+      ],
+      "installCommand": "npx -y goldbean-mcp goldbean-mcp@0.3.3",
+      "installKind": "package",
+      "category": "ai-agents",
+      "categories": [
+        "ai-agents",
+        "search",
+        "security"
+      ],
+      "status": "active",
+      "publishedAt": "2026-07-03T12:07:46.826112Z",
+      "updatedAt": "2026-07-03T12:07:46.826112Z",
+      "websiteUrl": "https://goldbean-api.xyz",
+      "repository": {
+        "url": "https://github.com/wuzenghai616-lang/goldbean",
         "source": "github"
       }
     },
@@ -34084,8 +35235,8 @@
   ],
   "meta": {
     "fromCache": false,
-    "count": 768,
+    "count": 796,
     "complete": true,
-    "otherRatio": 0.2487
+    "otherRatio": 0.2513
   }
 }

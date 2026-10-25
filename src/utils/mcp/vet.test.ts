@@ -79,11 +79,21 @@ describe('tier0Filter', () => {
         expect(tier0Filter([s], DEFAULT_VET_CONFIG)).toHaveLength(0);
     });
 
-    it('keeps only one server per source repository', () => {
+    it('keeps the highest-scoring eligible record per source repository', () => {
         const url = 'https://github.com/acme/dup';
         const a = server({ name: 'io.github.a/one', repository: { url }, description: 'First distinct description for the repo dedupe test here.' });
-        const b = server({ name: 'io.github.b/two', repository: { url }, description: 'Second distinct description for the repo dedupe test here.' });
-        expect(tier0Filter([a, b], DEFAULT_VET_CONFIG)).toHaveLength(1);
+        const b = server({ name: 'io.github.b/two', icons: [{ src: 'https://example.com/icon.png' }], repository: { url }, description: 'Second distinct description for the repo dedupe test here.' });
+        const res = gate([a, b], { ...DEFAULT_VET_CONFIG, minScore: 0 });
+        expect(res.servers.map((x) => x.name)).toEqual(['io.github.b/two']);
+    });
+
+    it('does not let a weak record block a qualifying sibling from the same repo', () => {
+        const url = 'https://github.com/acme/dup';
+        const weak = server({ name: 'io.github.a/weak', repository: { url }, description: 'First distinct description for the repo dedupe test here.' });
+        const strong = server({ name: 'com.acme/strong', repository: { url }, description: 'Second distinct description for the repo dedupe test here.' });
+        // weak is io.github (unverified, no icon) → 0.25 < minScore; strong is domain-verified → 0.35.
+        const res = gate([weak, strong], DEFAULT_VET_CONFIG);
+        expect(res.servers.map((x) => x.name)).toEqual(['com.acme/strong']);
     });
 });
 

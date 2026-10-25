@@ -1,7 +1,7 @@
 {
   "databases": {
     "title": "Databases",
-    "count": 28
+    "count": 30
   },
   "dev-tools": {
     "title": "Dev Tools",
@@ -13,15 +13,15 @@
   },
   "ai-llm": {
     "title": "AI & LLM",
-    "count": 23
+    "count": 25
   },
   "ai-agents": {
     "title": "AI Agents",
-    "count": 255
+    "count": 260
   },
   "search": {
     "title": "Search",
-    "count": 36
+    "count": 38
   },
   "payments-finance": {
     "title": "Payments & Finance",
@@ -33,11 +33,11 @@
   },
   "crm-sales": {
     "title": "CRM & Sales",
-    "count": 6
+    "count": 8
   },
   "productivity": {
     "title": "Productivity",
-    "count": 11
+    "count": 13
   },
   "data-analytics": {
     "title": "Data & Analytics",
@@ -49,7 +49,7 @@
   },
   "security": {
     "title": "Security",
-    "count": 8
+    "count": 9
   },
   "storage": {
     "title": "Storage",
@@ -61,7 +61,7 @@
   },
   "marketing": {
     "title": "Marketing",
-    "count": 6
+    "count": 7
   },
   "design": {
     "title": "Design",
@@ -73,7 +73,7 @@
   },
   "media": {
     "title": "Media",
-    "count": 30
+    "count": 32
   },
   "web-scraping": {
     "title": "Web Scraping",
@@ -89,6 +89,6 @@
   },
   "other": {
     "title": "Other",
-    "count": 191
+    "count": 200
   }
 }

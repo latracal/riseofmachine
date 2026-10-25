@@ -391,7 +391,9 @@
         const key = d.slug || 'server';
         let entry: Record<string, unknown>;
         if (kind === 'remote') {
-            entry = { url: cmd };
+            // Preserve the remote transport so clients can tell SSE from Streamable HTTP.
+            const transports = (d.transports || '').split(',').map((t) => t.trim());
+            entry = transports.includes('sse') ? { type: 'sse', url: cmd } : { type: 'http', url: cmd };
         } else {
             const tokens = cmd.split(' ').filter(Boolean);
             const env: Record<string, string> = {};

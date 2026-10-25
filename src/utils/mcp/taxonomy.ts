@@ -57,7 +57,6 @@ export const TAXONOMY: CategoryRule[] = [
             'orchestrator',
             'human in the loop',
             'approval',
-            'audit',
             'governance',
             'guardrail',
             'guardrails',

@@ -66,7 +66,11 @@ function normDesc(desc: string): string {
 
 // Placeholder / stub blurbs that clear the length bar but carry no real signal.
 const PLACEHOLDER_DESC =
-    /^(todo|tbd|wip|test|testing|demo|example|sample|placeholder|coming soon|untitled|no description|my (mcp )?server|an? mcp server|mcp server)\b/;
+    /^(todo|tbd|wip|test|testing|demo|example|sample|placeholder|coming soon|untitled|no description|my (mcp )?server|an? mcp server)\b/;
+
+// Bare "mcp server" is only a placeholder when it's the entire blurb —
+// "MCP server for searching docs" must pass, "mcp server" must not.
+const STUB_DESC = /^mcp server$/;
 
 // A3: description quality beyond raw length — reject URL-only blurbs, known
 // placeholder stubs, and near-empty text with fewer than 3 distinct words.
@@ -74,8 +78,8 @@ export function isLowQualityDesc(desc: string): boolean {
     const trimmed = (desc || '').trim();
     if (/^https?:\/\/\S+$/i.test(trimmed)) return true;
     const norm = normDesc(trimmed);
-    if (PLACEHOLDER_DESC.test(norm)) return true;
-    const distinct = new Set(norm.split(' ').filter((w) => w.length >= 2));
+    if (PLACEHOLDER_DESC.test(norm) || STUB_DESC.test(norm)) return true;
+    const distinct = new Set(trimmed.toLowerCase().match(/[\p{L}\p{N}]{2,}/gu) || []);
     return distinct.size < 3;
 }
 
@@ -101,7 +105,6 @@ export function isStdioOnly(server: McpServer): boolean {
 // policy: active + stdio-only, with anti-spam guards.
 export function tier0Filter(servers: McpServer[], cfg: VetConfig, now: number = Date.now()): McpServer[] {
     const seenDesc = new Set<string>();
-    const seenRepo = new Set<string>();
     const maxAgeMs = cfg.maxAgeDays > 0 ? cfg.maxAgeDays * 86_400_000 : Infinity;
     const out: McpServer[] = [];
     for (const s of servers) {
@@ -115,14 +118,11 @@ export function tier0Filter(servers: McpServer[], cfg: VetConfig, now: number = 
         if ((s.description || '').length < cfg.minDescLen) continue;
         if (isLowQualityDesc(s.description)) continue; // A3: placeholder / near-empty blurbs
         if (ageMs(s, now) > maxAgeMs) continue; // A2: drop stale servers
-        const repo = repoKey(gh);
-        if (seenRepo.has(repo)) continue; // one listing per source repository
         const key = normDesc(s.description);
         if (key) {
             if (seenDesc.has(key)) continue; // spam publishers reuse identical blurbs
             seenDesc.add(key);
         }
-        seenRepo.add(repo);
         out.push(s);
     }
     return out;
@@ -150,10 +150,23 @@ export function gate(servers: McpServer[], cfg: VetConfig, now: number = Date.no
         .map((server) => ({ server, score: scoreServer(server, cfg) }))
         .filter((item) => item.score >= cfg.minScore); // A5: hard-drop weak survivors
 
+    // One listing per source repository — keep the highest-scoring eligible
+    // record so a weak sibling can't block a qualifying one (score runs first).
+    const byRepo = new Map<string, Scored>();
+    for (const item of scored) {
+        const gh = parseGitHubRepo(item.server.repository?.url);
+        const repo = gh ? repoKey(gh) : item.server.name;
+        const prev = byRepo.get(repo);
+        if (!prev || item.score > prev.score || (item.score === prev.score && item.server.name.localeCompare(prev.server.name) < 0)) {
+            byRepo.set(repo, item);
+        }
+    }
+    const deduped = [...byRepo.values()];
+
     // Per-publisher cap: keep each owner's top-N by score (allowlisted are exempt).
     const byPublisher = new Map<string, Scored[]>();
     const exempt: Scored[] = [];
-    for (const item of scored) {
+    for (const item of deduped) {
         const pub = publisherOf(item.server);
         if (prefixMatch(pub, cfg.allowlist)) {
             exempt.push(item);
