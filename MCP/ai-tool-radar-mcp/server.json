@@ -7,13 +7,13 @@
     "url": "https://github.com/planetabhi/riseofmachine",
     "source": "github"
   },
-  "version": "0.1.0",
+  "version": "0.1.1",
   "packages": [
     {
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "ai-tool-radar-mcp",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "runtimeHint": "bunx",
       "transport": {
         "type": "stdio"

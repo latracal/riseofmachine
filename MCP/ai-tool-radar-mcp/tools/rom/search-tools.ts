@@ -12,9 +12,14 @@ interface IndexEntry {
 }
 
 let cached: IndexEntry[] | null = null;
+let cachedAt = 0;
+const INDEX_TTL_MS = 5 * 60 * 1000;
 
 async function loadIndex(): Promise<IndexEntry[]> {
-    if (!cached) cached = (await romRequest("/search-index.json")) as IndexEntry[];
+    if (!cached || Date.now() - cachedAt > INDEX_TTL_MS) {
+        cached = (await romRequest("/search-index.json")) as IndexEntry[];
+        cachedAt = Date.now();
+    }
     return cached;
 }
 

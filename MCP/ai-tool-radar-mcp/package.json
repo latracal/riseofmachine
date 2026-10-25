@@ -1,7 +1,7 @@
 {
   "name": "ai-tool-radar-mcp",
   "mcpName": "io.github.planetabhi/ai-tool-radar-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP server for the Rise of Machine AI tools directory.",
   "type": "module",
   "bin": {

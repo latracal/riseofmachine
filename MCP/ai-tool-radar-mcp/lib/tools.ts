@@ -39,6 +39,8 @@ export async function discoverTools(): Promise<ToolWithDefinition[]> {
 const BASE = (process.env.RISEOFMACHINE_API_BASE?.replace(/\/$/, "") ??
     "https://riseofmachine.com/api/v1");
 
+const REQUEST_TIMEOUT_MS = 15000;
+
 export interface RomRequestOptions {
     query?: Record<string, string | number | boolean | undefined | null>;
 }
@@ -53,7 +55,20 @@ export async function romRequest(endpoint: string, options: RomRequestOptions = 
         }
     }
 
-    const response = await fetch(url.toString(), { headers: { accept: "application/json" } });
+    let response: Response;
+    try {
+        response = await fetch(url.toString(), {
+            headers: { accept: "application/json" },
+            signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+        });
+    } catch (error) {
+        if (error instanceof DOMException && error.name === "TimeoutError") {
+            throw new Error(
+                `Rise of Machine API request timed out after ${REQUEST_TIMEOUT_MS}ms`,
+            );
+        }
+        throw error;
+    }
     const text = await response.text();
     let data: any;
     if (text) {
