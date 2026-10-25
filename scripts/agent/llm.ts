@@ -3,7 +3,11 @@
 // arguments). Override with NVIDIA_MODEL if the default is retired.
 
 const BASE_URL = process.env.NVIDIA_BASE_URL || 'https://integrate.api.nvidia.com/v1';
-const MODEL = process.env.NVIDIA_MODEL || 'nvidia/llama-3.3-nemotron-super-49b-v1.5';
+const MODEL = process.env.NVIDIA_MODEL || 'minimaxai/minimax-m3.1-flash';
+// NIM cold starts and reasoning-style models can take a while before emitting the forced tool call.
+const REQUEST_TIMEOUT_MS = 90_000;
+// The tool arguments are small JSON; this caps any runaway generation.
+const MAX_TOKENS = 1024;
 
 interface ToolSchema {
     name: string;
@@ -33,7 +37,7 @@ export async function generateObject<T>(opts: GenerateOptions): Promise<T> {
     let lastErr: Error | null = null;
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 30000);
+        const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
         try {
             const response = await fetch(`${BASE_URL}/chat/completions`, {
                 method: 'POST',
@@ -46,6 +50,7 @@ export async function generateObject<T>(opts: GenerateOptions): Promise<T> {
                 body: JSON.stringify({
                     model: MODEL,
                     temperature,
+                    max_tokens: MAX_TOKENS,
                     messages: [
                         { role: 'system', content: system },
                         { role: 'user', content: user },
