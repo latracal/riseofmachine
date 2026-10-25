@@ -2,7 +2,7 @@ name: Agent intake
 
 # Stage 2: runs the autonomous agent only after stage 1 (triage) applies the `validated`
 # label to a tool-suggestion issue. Fetches the site, judges AI/ML, writes the listing, and
-# opens a PR — or comments the reason and closes.
+# opens a PR — or comments the reason and labels. Issues are never auto-closed; a human decides.
 on:
   issues:
     types: [labeled]
@@ -69,10 +69,11 @@ jobs:
           retention-days: 1
 
   # Write-scoped: only runs for real issue submissions (never dry runs). Replays the
-  # agent's file changes from the artifact and publishes the PR or rejection.
+  # agent's file changes from the artifact and publishes the PR or rejection. Runs even
+  # when `process` failed so the issue always gets an explanation comment.
   publish:
     needs: process
-    if: ${{ github.event_name == 'issues' }}
+    if: ${{ always() && github.event_name == 'issues' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -84,13 +85,16 @@ jobs:
           fetch-depth: 0
 
       - name: Download agent output
+        id: download
+        continue-on-error: true
         uses: actions/download-artifact@v4
         with:
           name: agent-output
 
       # Untrusted values (title) are passed via env, never interpolated into the shell command.
       - name: Commit and push branch
-        if: ${{ needs.process.outputs.decision == 'pr' }}
+        id: push
+        if: ${{ needs.process.result == 'success' && needs.process.outputs.decision == 'pr' }}
         env:
           BRANCH: ${{ needs.process.outputs.branch }}
           TITLE: ${{ needs.process.outputs.title }}
@@ -103,19 +107,42 @@ jobs:
           git checkout -b "$BRANCH"
           git add src/data
           git commit -m "Add $TITLE to $CATEGORY" \
-            -m "Closes #${{ github.event.issue.number }}" \
+            -m "Refs #${{ github.event.issue.number }}" \
             -m "Co-authored-by: $AUTHOR <$AUTHOR_ID+$AUTHOR@users.noreply.github.com>"
           git push origin "$BRANCH"
 
-      - name: Open PR or comment rejection
+      # Always runs: whatever happened upstream, the agent's reason must reach the issue.
+      - name: Open PR or comment outcome
+        if: ${{ always() }}
         uses: actions/github-script@v7
+        env:
+          PROCESS_RESULT: ${{ needs.process.result }}
+          PUSH_OUTCOME: ${{ steps.push.outcome }}
         with:
           script: |
             const fs = require('fs');
-            const result = JSON.parse(fs.readFileSync('agent-result.json', 'utf8'));
             const { owner, repo } = context.repo;
             const issue_number = context.issue.number;
             const marker = '<!-- agent-intake -->';
+
+            const flagForReview = async (body, extraLabels = []) => {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body: `${marker}\n${body}` });
+              await github.rest.issues.addLabels({ owner, repo, issue_number, labels: ['needs-review', ...extraLabels] });
+            };
+
+            // Load the agent's result; a missing/corrupt file means the run never completed.
+            let result = null;
+            try {
+              result = JSON.parse(fs.readFileSync('agent-result.json', 'utf8'));
+            } catch { /* artifact missing or unreadable */ }
+
+            if (!result) {
+              await flagForReview(
+                `⚠️ The agent run did not complete (process: ${process.env.PROCESS_RESULT}), so no decision was recorded. ` +
+                `A maintainer needs to review this submission manually.`,
+              );
+              return;
+            }
 
             if (result.decision === 'reject') {
               await github.rest.issues.createComment({
@@ -123,10 +150,26 @@ jobs:
                 body: `${marker}\nThe agent could not accept this submission:\n\n- ❌ ${result.reason}`,
               });
               await github.rest.issues.addLabels({ owner, repo, issue_number, labels: [result.label] });
-              // Close hard rejections; leave soft ones open for a human.
-              if (['rejected', 'not-ai', 'duplicate'].includes(result.label)) {
-                await github.rest.issues.update({ owner, repo, issue_number, state: 'closed' });
-              }
+              // Never auto-close: a human reviews the label and decides whether to close.
+              return;
+            }
+
+            // Any decision other than an explicit PR is unexpected — still surface the reason.
+            if (result.decision !== 'pr') {
+              await flagForReview(
+                `⚠️ Unexpected agent decision \`${result.decision}\`.\n\n` +
+                `**AI/ML judgement:** ${result.reason || 'none provided'} (confidence ${result.confidence ?? 'n/a'}).`,
+              );
+              return;
+            }
+
+            // Approved, but the branch push failed or was skipped: can't open a PR, still post the reason.
+            if (process.env.PUSH_OUTCOME !== 'success') {
+              await flagForReview(
+                `⚠️ The agent approved this tool but the branch could not be published (push: ${process.env.PUSH_OUTCOME || 'did not run'}). ` +
+                `A maintainer needs to add it manually.\n\n` +
+                `**AI/ML judgement:** ${result.reason} (confidence ${result.confidence}).`,
+              );
               return;
             }
 
@@ -142,16 +185,26 @@ jobs:
               '',
               `**AI/ML judgement:** ${result.reason} (confidence ${result.confidence}).`,
               '',
-              `Closes #${issue_number}`,
+              `Refs #${issue_number}`,
             ].join('\n');
 
-            const pr = await github.rest.pulls.create({
-              owner, repo,
-              head: result.branch,
-              base: 'main',
-              title: `Add ${result.title} to ${result.category}`,
-              body: prBody,
-            });
+            let pr;
+            try {
+              pr = await github.rest.pulls.create({
+                owner, repo,
+                head: result.branch,
+                base: 'main',
+                title: `Add ${result.title} to ${result.category}`,
+                body: prBody,
+              });
+            } catch (err) {
+              await flagForReview(
+                `⚠️ The branch \`${result.branch}\` was pushed but opening the PR failed (${err.message}). ` +
+                `A maintainer can open it manually.\n\n` +
+                `**AI/ML judgement:** ${result.reason} (confidence ${result.confidence}).`,
+              );
+              return;
+            }
 
             await github.rest.issues.addLabels({
               owner, repo, issue_number: pr.data.number,
@@ -160,6 +213,7 @@ jobs:
 
             await github.rest.issues.createComment({
               owner, repo, issue_number,
-              body: `${marker}\n✅ Opened PR #${pr.data.number} for review.`,
+              body: `${marker}\n✅ Opened PR #${pr.data.number} for review.\n\n` +
+                `**AI/ML judgement:** ${result.reason} (confidence ${result.confidence}).`,
             });
             await github.rest.issues.addLabels({ owner, repo, issue_number, labels: ['needs-review'] });

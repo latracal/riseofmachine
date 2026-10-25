@@ -30,18 +30,18 @@ jobs:
               owner, repo, state: 'open', creator: author, labels: 'tool-suggestion', per_page: 100,
             });
             // Keep the oldest (lowest-numbered) submission so overlapping runs resolve
-            // deterministically: only the newer issue closes itself.
+            // deterministically: only the newer issue gets flagged. Never auto-close — a
+            // human decides; we only label and comment.
             const others = existing.data.filter((i) => i.number !== issue_number && !i.pull_request);
             const oldest = others.reduce((min, i) => Math.min(min, i.number), Infinity);
             if (oldest < issue_number) {
               await github.rest.issues.createComment({
                 owner, repo, issue_number,
                 body: `<!-- triage-bot -->\nYou already have an open submission in #${oldest}. ` +
-                  `Only one open tool submission per person is allowed — this one has been closed. ` +
-                  `Please wait until #${oldest} is resolved, then submit again.`,
+                  `Only one open tool submission per person is allowed. ` +
+                  `Please wait until #${oldest} is resolved before this one is reviewed.`,
               });
               await github.rest.issues.addLabels({ owner, repo, issue_number, labels: ['rate-limited'] });
-              await github.rest.issues.update({ owner, repo, issue_number, state: 'closed' });
               return;
             }
 
