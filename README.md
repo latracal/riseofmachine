@@ -27,6 +27,38 @@ A read-only JSON API serves the tools catalog at `https://riseofmachine.com/api/
 
 List endpoints return a `data` array with `meta` (total, page, per page, total pages) and `links` (self, next, previous, first, last). Pages hold 24 tools. Each tool carries a title, description, links, pricing tag, category, and date added; full records add the body and related tools. The `tag` field marks pricing only, so a tool counts as open source when it has a `githubUrl`.
 
+### MCP server
+
+The `ai-tool-radar-mcp` server turns the directory API into MCP tools, so clients (Claude Desktop, Cursor, VS Code, Gemini CLI, and any MCP client) answer from the live catalog instead of model memory. It needs [Bun](https://bun.sh/) ≥ 1.2, so launch it with `bunx`.
+
+Most clients (Claude Desktop, Cursor, Gemini CLI) use a `mcpServers` key:
+
+```json
+{
+  "mcpServers": {
+    "ai-tool-radar": {
+      "command": "bunx",
+      "args": ["ai-tool-radar-mcp"]
+    }
+  }
+}
+```
+
+VS Code uses a `servers` key in `.vscode/mcp.json` or your user `mcp.json`:
+
+```json
+{
+  "servers": {
+    "ai-tool-radar": {
+      "command": "bunx",
+      "args": ["ai-tool-radar-mcp"]
+    }
+  }
+}
+```
+
+No API key. See [MCP/ai-tool-radar-mcp](./MCP/ai-tool-radar-mcp/README.md) for per-client config file locations and the full tool list.
+
 ### Claude Code plugin
 
 The `ai-tool-radar` plugin asks the live API for real, current tools instead of relying on model memory. Add it in Claude Code:
