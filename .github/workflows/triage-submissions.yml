@@ -13,11 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v7
+        env:
+          HAS_TRIAGE_TOKEN: ${{ secrets.TRIAGE_TOKEN != '' }}
         with:
-          # Required: a PAT/App token so the `validated` label event triggers agent-intake.yml.
-          # The default GITHUB_TOKEN cannot start other workflow runs, so no fallback here — a
-          # missing secret fails loudly instead of silently skipping the agent.
-          github-token: ${{ secrets.TRIAGE_TOKEN }}
+          # TRIAGE_TOKEN (PAT/App) is what lets the `validated` label trigger agent-intake.yml;
+          # the default GITHUB_TOKEN cannot start other workflow runs. Fall back to it so triage
+          # still works without the secret — a warning below flags that auto-intake is disabled.
+          github-token: ${{ secrets.TRIAGE_TOKEN || github.token }}
           script: |
             const { owner, repo } = context.repo;
             const issue_number = context.issue.number;
@@ -66,3 +68,7 @@ jobs:
             await github.rest.issues.createComment({ owner, repo, issue_number, body: commentBody });
 
             await github.rest.issues.addLabels({ owner, repo, issue_number, labels: [label] });
+
+            if (label === 'validated' && process.env.HAS_TRIAGE_TOKEN !== 'true') {
+              core.warning('TRIAGE_TOKEN secret is not set: the `validated` label was applied with the default token, so agent-intake.yml will NOT auto-trigger. Add TRIAGE_TOKEN (or re-apply the label with a PAT) to enable autonomous intake.');
+            }
