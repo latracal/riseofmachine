@@ -1,9 +1,9 @@
 // Thin NVIDIA NIM wrapper. OpenAI-compatible, so only base URL + key change to swap providers.
-// llama-3.3-70b supports function/tool calling but NOT native structured output, so we force
-// a single tool call and read its JSON arguments.
+// The model must support function/tool calling (we force a single tool call and read its JSON
+// arguments). Override with NVIDIA_MODEL if the default is retired.
 
 const BASE_URL = process.env.NVIDIA_BASE_URL || 'https://integrate.api.nvidia.com/v1';
-const MODEL = process.env.NVIDIA_MODEL || 'meta/llama-3.3-70b-instruct';
+const MODEL = process.env.NVIDIA_MODEL || 'nvidia/llama-3.3-nemotron-super-49b-v1.5';
 
 interface ToolSchema {
     name: string;
