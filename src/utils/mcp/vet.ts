@@ -13,6 +13,8 @@ export interface VetWeights {
 
 export interface VetConfig {
     minDescLen: number; // Tier-0: drop thin descriptions
+    maxAgeDays: number; // Tier-0: drop stale servers (0 = disabled) — A2
+    minScore: number; // drop survivors scoring below this (0 = disabled) — A5
     perPublisherCap: number; // keep each namespace owner's top-N by score
     maxTotal: number; // hard cap on total survivors (0 = unlimited)
     requireDistinctTitle: boolean; // drop servers whose title is just the reverse-DNS name
@@ -23,6 +25,8 @@ export interface VetConfig {
 
 export const DEFAULT_VET_CONFIG: VetConfig = {
     minDescLen: 40,
+    maxAgeDays: 540, // ~18 months since the last registry update
+    minScore: 0.3,
     perPublisherCap: 3,
     maxTotal: 0,
     requireDistinctTitle: true,
@@ -60,6 +64,31 @@ function normDesc(desc: string): string {
     return desc.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 }
 
+// Placeholder / stub blurbs that clear the length bar but carry no real signal.
+const PLACEHOLDER_DESC =
+    /^(todo|tbd|wip|test|testing|demo|example|sample|placeholder|coming soon|untitled|no description|my (mcp )?server|an? mcp server)\b/;
+
+// Bare "mcp server" is only a placeholder when it's the entire blurb —
+// "MCP server for searching docs" must pass, "mcp server" must not.
+const STUB_DESC = /^mcp server$/;
+
+// A3: description quality beyond raw length — reject URL-only blurbs, known
+// placeholder stubs, and near-empty text with fewer than 3 distinct words.
+export function isLowQualityDesc(desc: string): boolean {
+    const trimmed = (desc || '').trim();
+    if (/^https?:\/\/\S+$/i.test(trimmed)) return true;
+    const norm = normDesc(trimmed);
+    if (PLACEHOLDER_DESC.test(norm) || STUB_DESC.test(norm)) return true;
+    const distinct = new Set(trimmed.toLowerCase().match(/[\p{L}\p{N}]{2,}/gu) || []);
+    return distinct.size < 3;
+}
+
+// A2: milliseconds since the server's last registry update (or publish).
+function ageMs(server: McpServer, now: number): number {
+    const ts = Date.parse(server.updatedAt || server.publishedAt || '');
+    return Number.isNaN(ts) ? Infinity : now - ts;
+}
+
 // Union of every declared transport across remotes + packages.
 export function transportsOf(server: McpServer): string[] {
     return [...new Set([...server.remotes.map((r) => r.type), ...server.packages.map((p) => p.transport)])];
@@ -74,9 +103,9 @@ export function isStdioOnly(server: McpServer): boolean {
 
 // Tier-0 intrinsic filter (§13.2). Cheap, offline; also enforces the listing
 // policy: active + stdio-only, with anti-spam guards.
-export function tier0Filter(servers: McpServer[], cfg: VetConfig): McpServer[] {
+export function tier0Filter(servers: McpServer[], cfg: VetConfig, now: number = Date.now()): McpServer[] {
     const seenDesc = new Set<string>();
-    const seenRepo = new Set<string>();
+    const maxAgeMs = cfg.maxAgeDays > 0 ? cfg.maxAgeDays * 86_400_000 : Infinity;
     const out: McpServer[] = [];
     for (const s of servers) {
         if (prefixMatch(publisherOf(s), cfg.denylist)) continue;
@@ -87,14 +116,13 @@ export function tier0Filter(servers: McpServer[], cfg: VetConfig): McpServer[] {
         if (!gh) continue;
         if (cfg.requireDistinctTitle && s.title.trim().toLowerCase() === s.name.trim().toLowerCase()) continue;
         if ((s.description || '').length < cfg.minDescLen) continue;
-        const repo = repoKey(gh);
-        if (seenRepo.has(repo)) continue; // one listing per source repository
+        if (isLowQualityDesc(s.description)) continue; // A3: placeholder / near-empty blurbs
+        if (ageMs(s, now) > maxAgeMs) continue; // A2: drop stale servers
         const key = normDesc(s.description);
         if (key) {
             if (seenDesc.has(key)) continue; // spam publishers reuse identical blurbs
             seenDesc.add(key);
         }
-        seenRepo.add(repo);
         out.push(s);
     }
     return out;
@@ -116,14 +144,29 @@ interface Scored {
 // Offline quality gate: Tier-0 intrinsic filter (active + stdio-only + anti-spam)
 // + per-publisher cap + optional hard total cap, ranked by intrinsic score.
 // No network, no tokens.
-export function gate(servers: McpServer[], cfg: VetConfig): GateResult {
-    const tier0 = tier0Filter(servers, cfg);
-    const scored: Scored[] = tier0.map((server) => ({ server, score: scoreServer(server, cfg) }));
+export function gate(servers: McpServer[], cfg: VetConfig, now: number = Date.now()): GateResult {
+    const tier0 = tier0Filter(servers, cfg, now);
+    const scored: Scored[] = tier0
+        .map((server) => ({ server, score: scoreServer(server, cfg) }))
+        .filter((item) => item.score >= cfg.minScore); // A5: hard-drop weak survivors
+
+    // One listing per source repository — keep the highest-scoring eligible
+    // record so a weak sibling can't block a qualifying one (score runs first).
+    const byRepo = new Map<string, Scored>();
+    for (const item of scored) {
+        const gh = parseGitHubRepo(item.server.repository?.url);
+        const repo = gh ? repoKey(gh) : item.server.name;
+        const prev = byRepo.get(repo);
+        if (!prev || item.score > prev.score || (item.score === prev.score && item.server.name.localeCompare(prev.server.name) < 0)) {
+            byRepo.set(repo, item);
+        }
+    }
+    const deduped = [...byRepo.values()];
 
     // Per-publisher cap: keep each owner's top-N by score (allowlisted are exempt).
     const byPublisher = new Map<string, Scored[]>();
     const exempt: Scored[] = [];
-    for (const item of scored) {
+    for (const item of deduped) {
         const pub = publisherOf(item.server);
         if (prefixMatch(pub, cfg.allowlist)) {
             exempt.push(item);

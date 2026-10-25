@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { tier0Filter, gate, scoreServer, publisherOf, isStdioOnly, transportsOf, DEFAULT_VET_CONFIG, type VetConfig } from './vet';
+import { tier0Filter, gate, scoreServer, isLowQualityDesc, publisherOf, isStdioOnly, transportsOf, DEFAULT_VET_CONFIG, type VetConfig } from './vet';
 import { mapServer, type RawEntry } from './map';
 import type { McpServer } from '../../types/mcp';
 
@@ -79,18 +79,28 @@ describe('tier0Filter', () => {
         expect(tier0Filter([s], DEFAULT_VET_CONFIG)).toHaveLength(0);
     });
 
-    it('keeps only one server per source repository', () => {
+    it('keeps the highest-scoring eligible record per source repository', () => {
         const url = 'https://github.com/acme/dup';
         const a = server({ name: 'io.github.a/one', repository: { url }, description: 'First distinct description for the repo dedupe test here.' });
-        const b = server({ name: 'io.github.b/two', repository: { url }, description: 'Second distinct description for the repo dedupe test here.' });
-        expect(tier0Filter([a, b], DEFAULT_VET_CONFIG)).toHaveLength(1);
+        const b = server({ name: 'io.github.b/two', icons: [{ src: 'https://example.com/icon.png' }], repository: { url }, description: 'Second distinct description for the repo dedupe test here.' });
+        const res = gate([a, b], { ...DEFAULT_VET_CONFIG, minScore: 0 });
+        expect(res.servers.map((x) => x.name)).toEqual(['io.github.b/two']);
+    });
+
+    it('does not let a weak record block a qualifying sibling from the same repo', () => {
+        const url = 'https://github.com/acme/dup';
+        const weak = server({ name: 'io.github.a/weak', repository: { url }, description: 'First distinct description for the repo dedupe test here.' });
+        const strong = server({ name: 'com.acme/strong', repository: { url }, description: 'Second distinct description for the repo dedupe test here.' });
+        // weak is io.github (unverified, no icon) → 0.25 < minScore; strong is domain-verified → 0.35.
+        const res = gate([weak, strong], DEFAULT_VET_CONFIG);
+        expect(res.servers.map((x) => x.name)).toEqual(['com.acme/strong']);
     });
 });
 
 describe('gate', () => {
     it('includes active, stdio-only servers with a GitHub repo (no token, no network)', () => {
         const s = server({ name: 'io.github.acme/thing' });
-        const res = gate([s], DEFAULT_VET_CONFIG);
+        const res = gate([s], { ...DEFAULT_VET_CONFIG, minScore: 0 });
         expect(res.servers.map((x) => x.name)).toEqual(['io.github.acme/thing']);
         expect(res.stats.final).toBe(1);
     });
@@ -102,7 +112,7 @@ describe('gate', () => {
     });
 
     it('allowlisted publishers are exempt from the per-publisher cap', () => {
-        const cfg: VetConfig = { ...DEFAULT_VET_CONFIG, allowlist: ['io.github.official'], perPublisherCap: 1 };
+        const cfg: VetConfig = { ...DEFAULT_VET_CONFIG, minScore: 0, allowlist: ['io.github.official'], perPublisherCap: 1 };
         const servers = [0, 1, 2].map((i) =>
             server({ name: `io.github.official/x${i}`, description: `Official server number ${i} that is quite useful.`, repository: { url: `https://github.com/official/x${i}` } }),
         );
@@ -110,7 +120,7 @@ describe('gate', () => {
     });
 
     it('applies the per-publisher cap', () => {
-        const cfg: VetConfig = { ...DEFAULT_VET_CONFIG, perPublisherCap: 2 };
+        const cfg: VetConfig = { ...DEFAULT_VET_CONFIG, minScore: 0, perPublisherCap: 2 };
         const servers = [0, 1, 2, 3, 4].map((i) =>
             server({ name: `io.github.flood/r${i}`, description: `Distinct description number ${i} for a server.`, repository: { url: `https://github.com/flood/r${i}` } }),
         );
@@ -118,11 +128,70 @@ describe('gate', () => {
     });
 
     it('never exceeds maxTotal when set', () => {
-        const cfg: VetConfig = { ...DEFAULT_VET_CONFIG, perPublisherCap: 10, maxTotal: 2 };
+        const cfg: VetConfig = { ...DEFAULT_VET_CONFIG, minScore: 0, perPublisherCap: 10, maxTotal: 2 };
         const servers = [0, 1, 2, 3].map((i) =>
             server({ name: `io.github.p${i}/x`, description: `Unique server description content ${i} here now.`, repository: { url: `https://github.com/p${i}/x` } }),
         );
         expect(gate(servers, cfg).servers).toHaveLength(2);
+    });
+});
+
+describe('A2 staleness', () => {
+    const now = Date.parse('2026-10-25T00:00:00Z');
+
+    it('keeps servers updated within maxAgeDays', () => {
+        const fresh = server({ name: 'io.github.a/fresh', description: 'A fresh server updated quite recently indeed now.' });
+        expect(tier0Filter([fresh], DEFAULT_VET_CONFIG, now).map((s) => s.name)).toEqual(['io.github.a/fresh']);
+    });
+
+    it('drops servers older than maxAgeDays', () => {
+        const fresh = server({ name: 'io.github.a/stale', description: 'A once useful server that has gone quiet now.' });
+        const stale = { ...fresh, updatedAt: '2023-01-01T00:00:00Z', publishedAt: '2023-01-01T00:00:00Z' };
+        expect(tier0Filter([stale], DEFAULT_VET_CONFIG, now)).toHaveLength(0);
+    });
+
+    it('is disabled when maxAgeDays is 0', () => {
+        const fresh = server({ name: 'io.github.a/old', description: 'An ancient server kept because age gating is off.' });
+        const stale = { ...fresh, updatedAt: '2019-01-01T00:00:00Z', publishedAt: '2019-01-01T00:00:00Z' };
+        expect(tier0Filter([stale], { ...DEFAULT_VET_CONFIG, maxAgeDays: 0 }, now)).toHaveLength(1);
+    });
+});
+
+describe('A3 description quality', () => {
+    it('flags URL-only, placeholder, and near-empty blurbs', () => {
+        expect(isLowQualityDesc('https://example.com/readme-goes-here')).toBe(true);
+        expect(isLowQualityDesc('TODO: write a proper description for this server later')).toBe(true);
+        expect(isLowQualityDesc('My MCP server that will eventually do something useful')).toBe(true);
+        expect(isLowQualityDesc('alpha alpha alpha alpha alpha alpha alpha alpha')).toBe(true);
+    });
+
+    it('accepts a genuine description', () => {
+        expect(isLowQualityDesc('A reasonably descriptive MCP server that does useful things.')).toBe(false);
+    });
+
+    it('tier0Filter drops placeholder blurbs that clear the length bar', () => {
+        const s = server({ name: 'io.github.a/stub', description: 'placeholder placeholder placeholder placeholder value' });
+        expect(tier0Filter([s], DEFAULT_VET_CONFIG)).toHaveLength(0);
+    });
+});
+
+describe('A5 minScore gate', () => {
+    it('drops survivors scoring below minScore', () => {
+        const plain = server({ name: 'io.github.acme/plain', description: 'A github server without an icon, fairly plain here.' });
+        expect(scoreServer(plain, DEFAULT_VET_CONFIG)).toBeLessThan(DEFAULT_VET_CONFIG.minScore);
+        expect(gate([plain], DEFAULT_VET_CONFIG).servers).toHaveLength(0);
+        expect(gate([plain], { ...DEFAULT_VET_CONFIG, minScore: 0 }).servers).toHaveLength(1);
+    });
+
+    it('keeps polished or domain-verified servers', () => {
+        const iconic = server({
+            name: 'io.github.acme/iconic',
+            description: 'A github server that ships a real icon asset here.',
+            repository: { url: 'https://github.com/acme/iconic' },
+            icons: ['https://cdn.example.com/i.png'],
+        });
+        const verified = server({ name: 'com.acme/srv', description: 'A domain verified publisher server, no icon needed.', repository: { url: 'https://github.com/acme/verified' } });
+        expect(gate([iconic, verified], DEFAULT_VET_CONFIG).servers).toHaveLength(2);
     });
 });
 
