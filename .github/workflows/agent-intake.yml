@@ -1,0 +1,130 @@
+name: Agent intake
+
+# Stage 2: runs the autonomous agent only after stage 1 (triage) applies the `validated`
+# label to a tool-suggestion issue. Fetches the site, judges AI/ML, writes the listing, and
+# opens a PR — or comments the reason and closes.
+on:
+  issues:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'Tool URL to run the full agent against (dry run — no PR, no comments).'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: agent-intake-${{ github.event.issue.number || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  intake:
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.label.name == 'validated' && contains(github.event.issue.labels.*.name, 'tool-suggestion')) }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bun install --frozen-lockfile
+
+      - id: agent
+        env:
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+          INPUT_URL: ${{ github.event.inputs.url }}
+        run: bun run scripts/agent/intake.ts
+
+      - name: Dry-run summary
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          echo '### Agent dry-run result' >> "$GITHUB_STEP_SUMMARY"
+          echo '```json' >> "$GITHUB_STEP_SUMMARY"
+          cat agent-result.json >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+      # Untrusted values (title) are passed via env, never interpolated into the shell command.
+      - name: Commit and push branch
+        if: ${{ github.event_name == 'issues' && steps.agent.outputs.decision == 'pr' }}
+        env:
+          BRANCH: ${{ steps.agent.outputs.branch }}
+          TITLE: ${{ steps.agent.outputs.title }}
+          CATEGORY: ${{ steps.agent.outputs.category }}
+          AUTHOR: ${{ github.event.issue.user.login }}
+          AUTHOR_ID: ${{ github.event.issue.user.id }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add src/data
+          git commit -m "Add $TITLE to $CATEGORY" \
+            -m "Closes #${{ github.event.issue.number }}" \
+            -m "Co-authored-by: $AUTHOR <$AUTHOR_ID+$AUTHOR@users.noreply.github.com>"
+          git push origin "$BRANCH"
+
+      - name: Open PR or comment rejection
+        if: ${{ github.event_name == 'issues' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const result = JSON.parse(fs.readFileSync('agent-result.json', 'utf8'));
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const marker = '<!-- agent-intake -->';
+
+            if (result.decision === 'reject') {
+              await github.rest.issues.createComment({
+                owner, repo, issue_number,
+                body: `${marker}\nThe agent could not accept this submission:\n\n- ❌ ${result.reason}`,
+              });
+              await github.rest.issues.addLabels({ owner, repo, issue_number, labels: [result.label] });
+              // Close hard rejections; leave soft ones open for a human.
+              if (['rejected', 'not-ai', 'duplicate'].includes(result.label)) {
+                await github.rest.issues.update({ owner, repo, issue_number, state: 'closed' });
+              }
+              return;
+            }
+
+            const prBody = [
+              `${marker}`,
+              `Autonomous submission from #${issue_number}.`,
+              '',
+              `- **Tool:** ${result.title}`,
+              `- **URL:** ${result.finalUrl}`,
+              `- **Category:** ${result.category}`,
+              `- **Pricing:** ${result.tag}`,
+              `- **Description:** ${result.body}`,
+              '',
+              `**AI/ML judgement:** ${result.reason} (confidence ${result.confidence}).`,
+              '',
+              `Closes #${issue_number}`,
+            ].join('\n');
+
+            const pr = await github.rest.pulls.create({
+              owner, repo,
+              head: result.branch,
+              base: 'main',
+              title: `Add ${result.title} to ${result.category}`,
+              body: prBody,
+            });
+
+            await github.rest.issues.addLabels({
+              owner, repo, issue_number: pr.data.number,
+              labels: ['needs-review', 'agent-generated'],
+            });
+
+            await github.rest.issues.createComment({
+              owner, repo, issue_number,
+              body: `${marker}\n✅ Opened PR #${pr.data.number} for review.`,
+            });
+            await github.rest.issues.addLabels({ owner, repo, issue_number, labels: ['needs-review'] });
