@@ -14,6 +14,9 @@ jobs:
     steps:
       - uses: actions/github-script@v7
         with:
+          # Use a PAT/App token so the `validated` label event triggers agent-intake.yml.
+          # Events from the default GITHUB_TOKEN do not start other workflow runs.
+          github-token: ${{ secrets.TRIAGE_TOKEN || secrets.GITHUB_TOKEN }}
           script: |
             const { owner, repo } = context.repo;
             const issue_number = context.issue.number;
@@ -23,13 +26,16 @@ jobs:
             const existing = await github.rest.issues.listForRepo({
               owner, repo, state: 'open', creator: author, labels: 'tool-suggestion', per_page: 100,
             });
-            const other = existing.data.find((i) => i.number !== issue_number && !i.pull_request);
-            if (other) {
+            // Keep the oldest (lowest-numbered) submission so overlapping runs resolve
+            // deterministically: only the newer issue closes itself.
+            const others = existing.data.filter((i) => i.number !== issue_number && !i.pull_request);
+            const oldest = others.reduce((min, i) => Math.min(min, i.number), Infinity);
+            if (oldest < issue_number) {
               await github.rest.issues.createComment({
                 owner, repo, issue_number,
-                body: `<!-- triage-bot -->\nYou already have an open submission in #${other.number}. ` +
+                body: `<!-- triage-bot -->\nYou already have an open submission in #${oldest}. ` +
                   `Only one open tool submission per person is allowed — this one has been closed. ` +
-                  `Please wait until #${other.number} is resolved, then submit again.`,
+                  `Please wait until #${oldest} is resolved, then submit again.`,
               });
               await github.rest.issues.addLabels({ owner, repo, issue_number, labels: ['rate-limited'] });
               await github.rest.issues.update({ owner, repo, issue_number, state: 'closed' });

@@ -2,9 +2,11 @@
 // No LLM here — only network + HTML heuristics. The AI/ML judgement happens in judge.ts.
 
 import { parse } from 'node-html-parser';
+import { lookup } from 'node:dns/promises';
 
 const TIMEOUT_MS = 10000;
 const MAX_BYTES = 500_000;
+const MAX_REDIRECTS = 5;
 const USER_AGENT =
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
 
@@ -34,15 +36,12 @@ function fail(reason: string): SiteResult {
     return { ok: false, reason };
 }
 
-// Block SSRF to loopback, link-local, cloud-metadata, and RFC 1918 private ranges. The triage
-// gate only checks "https + dotted host", so IP literals like 169.254.169.254 would pass.
-function isBlockedHost(hostname: string): boolean {
-    const host = hostname.toLowerCase().replace(/^\[|\]$/g, '');
-    if (host === 'localhost' || host.endsWith('.localhost')) return true;
-    if (host === 'metadata' || host === 'metadata.google.internal') return true;
-    if (host === '::1' || host.startsWith('fe80:') || host.startsWith('fc') || host.startsWith('fd')) return true;
-
-    const v4 = host.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
+// Returns true if a resolved IP (IPv4, IPv6, or IPv4-mapped IPv6) is loopback, link-local,
+// cloud-metadata, or an RFC 1918 / CGNAT private range.
+function isBlockedAddress(ip: string): boolean {
+    const addr = ip.toLowerCase();
+    const mapped = addr.match(/^::ffff:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/);
+    const v4 = (mapped ? mapped[1] : addr).match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
     if (v4) {
         const [a, b] = [Number(v4[1]), Number(v4[2])];
         if (a === 0 || a === 10 || a === 127) return true;          // this-net, private, loopback
@@ -50,8 +49,41 @@ function isBlockedHost(hostname: string): boolean {
         if (a === 172 && b >= 16 && b <= 31) return true;           // private
         if (a === 192 && b === 168) return true;                    // private
         if (a === 100 && b >= 64 && b <= 127) return true;          // CGNAT
+        return false;
+    }
+    // Real IPv6 literal: loopback (::1), unspecified (::), link-local (fe80::/10), ULA (fc00::/7).
+    if (addr === '::1' || addr === '::') return true;
+    if (addr.startsWith('fe80:') || addr.startsWith('fc') || addr.startsWith('fd')) return true;
+    return false;
+}
+
+// Blocks SSRF by hostname: internal names and IP literals in private/internal ranges. The triage
+// gate only checks "https + dotted host", so IP literals like 169.254.169.254 would otherwise pass.
+function isBlockedHost(hostname: string): boolean {
+    const host = hostname.toLowerCase().replace(/^\[|\]$/g, '');
+    if (host === 'localhost' || host.endsWith('.localhost')) return true;
+    if (host === 'metadata' || host === 'metadata.google.internal') return true;
+    // Only evaluate as an address when the host is an IP literal; plain domains such as
+    // "fcbarcelona.com" must fall through to DNS resolution instead of matching here.
+    if (host.includes(':') || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(host)) {
+        return isBlockedAddress(host);
     }
     return false;
+}
+
+// Full SSRF check for one hop: reject blocked literals, then resolve the name and reject if any
+// A/AAAA record is private/internal (DNS-based SSRF). Returns a failure reason, or null if allowed.
+async function hostBlockReason(hostname: string): Promise<string | null> {
+    if (isBlockedHost(hostname)) return 'URL points to a private or internal host.';
+    try {
+        const addrs = await lookup(hostname, { all: true });
+        if (addrs.some((a) => isBlockedAddress(a.address))) {
+            return 'URL resolves to a private or internal address.';
+        }
+    } catch {
+        return 'Could not resolve the site host.';
+    }
+    return null;
 }
 
 export async function fetchSite(url: string): Promise<SiteResult> {
@@ -64,31 +96,40 @@ export async function fetchSite(url: string): Promise<SiteResult> {
     if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
         return fail('URL must use http or https.');
     }
-    if (isBlockedHost(parsed.hostname)) {
-        return fail('URL points to a private or internal host.');
-    }
 
     const attempt = async (): Promise<SiteResult> => {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
         try {
-            const response = await fetch(parsed.toString(), {
-                headers: { 'User-Agent': USER_AGENT, Accept: 'text/html,application/xhtml+xml' },
-                redirect: 'follow',
-                signal: controller.signal,
-            });
+            // Follow redirects manually so every hop's host is validated (literal + DNS) before it
+            // is requested, blocking a public URL from redirecting into an internal one.
+            let current = new URL(parsed.toString());
+            let response: Response;
+            for (let hop = 0; ; hop++) {
+                if (current.protocol !== 'https:' && current.protocol !== 'http:') {
+                    return fail('URL must use http or https.');
+                }
+                const blocked = await hostBlockReason(current.hostname);
+                if (blocked) return fail(blocked);
+
+                response = await fetch(current.toString(), {
+                    headers: { 'User-Agent': USER_AGENT, Accept: 'text/html,application/xhtml+xml' },
+                    redirect: 'manual',
+                    signal: controller.signal,
+                });
+
+                if ([301, 302, 303, 307, 308].includes(response.status)) {
+                    const location = response.headers.get('location');
+                    if (!location) return fail(`Site returned HTTP ${response.status} without a redirect target.`);
+                    if (hop >= MAX_REDIRECTS) return fail('Too many redirects.');
+                    current = new URL(location, current);
+                    continue;
+                }
+                break;
+            }
 
             if (!response.ok) {
                 return fail(`Site returned HTTP ${response.status}.`);
-            }
-
-            // A public URL can redirect to an internal one; re-check the resolved host.
-            try {
-                if (response.url && isBlockedHost(new URL(response.url).hostname)) {
-                    return fail('URL redirected to a private or internal host.');
-                }
-            } catch {
-                /* non-parseable response.url — ignore */
             }
 
             const contentType = response.headers.get('content-type') || '';
@@ -122,7 +163,7 @@ export async function fetchSite(url: string): Promise<SiteResult> {
 
             return {
                 ok: true,
-                finalUrl: response.url || parsed.toString(),
+                finalUrl: current.toString(),
                 title,
                 description,
                 ogTitle,

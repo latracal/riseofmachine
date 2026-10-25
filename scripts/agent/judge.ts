@@ -47,7 +47,7 @@ export async function judgeIsAI(site: SiteResult): Promise<{ accepted: boolean; 
     const raw = await generateObject<Judgement>({ system: SYSTEM, user, tool: TOOL });
 
     const judgement: Judgement = {
-        isAI: Boolean(raw.isAI),
+        isAI: raw.isAI === true,
         confidence: Math.max(0, Math.min(1, Number(raw.confidence) || 0)),
         reason: String(raw.reason || '').trim() || 'No reason provided.',
     };

@@ -13,19 +13,25 @@ on:
         required: true
         type: string
 
+# Least privilege: processing runs read-only; write scopes are granted only to the publish job.
 permissions:
-  contents: write
-  pull-requests: write
-  issues: write
+  contents: read
 
 concurrency:
   group: agent-intake-${{ github.event.issue.number || github.run_id }}
   cancel-in-progress: false
 
 jobs:
-  intake:
+  # Read-only: checkout, install deps, run the agent. Never holds write credentials,
+  # so dry runs and a compromised dependency cannot push to the repo.
+  process:
     if: ${{ github.event_name == 'workflow_dispatch' || (github.event.label.name == 'validated' && contains(github.event.issue.labels.*.name, 'tool-suggestion')) }}
     runs-on: ubuntu-latest
+    outputs:
+      decision: ${{ steps.agent.outputs.decision }}
+      branch: ${{ steps.agent.outputs.branch }}
+      title: ${{ steps.agent.outputs.title }}
+      category: ${{ steps.agent.outputs.category }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -52,13 +58,43 @@ jobs:
           cat agent-result.json >> "$GITHUB_STEP_SUMMARY"
           echo '```' >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Upload agent output
+        if: ${{ github.event_name == 'issues' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-output
+          path: |
+            agent-result.json
+            src/data
+          retention-days: 1
+
+  # Write-scoped: only runs for real issue submissions (never dry runs). Replays the
+  # agent's file changes from the artifact and publishes the PR or rejection.
+  publish:
+    needs: process
+    if: ${{ github.event_name == 'issues' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download agent output
+        uses: actions/download-artifact@v4
+        with:
+          name: agent-output
+
       # Untrusted values (title) are passed via env, never interpolated into the shell command.
       - name: Commit and push branch
-        if: ${{ github.event_name == 'issues' && steps.agent.outputs.decision == 'pr' }}
+        if: ${{ needs.process.outputs.decision == 'pr' }}
         env:
-          BRANCH: ${{ steps.agent.outputs.branch }}
-          TITLE: ${{ steps.agent.outputs.title }}
-          CATEGORY: ${{ steps.agent.outputs.category }}
+          BRANCH: ${{ needs.process.outputs.branch }}
+          TITLE: ${{ needs.process.outputs.title }}
+          CATEGORY: ${{ needs.process.outputs.category }}
           AUTHOR: ${{ github.event.issue.user.login }}
           AUTHOR_ID: ${{ github.event.issue.user.id }}
         run: |
@@ -72,7 +108,6 @@ jobs:
           git push origin "$BRANCH"
 
       - name: Open PR or comment rejection
-        if: ${{ github.event_name == 'issues' }}
         uses: actions/github-script@v7
         with:
           script: |
