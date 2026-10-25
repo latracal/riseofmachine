@@ -75,13 +75,20 @@ function isBlockedHost(hostname: string): boolean {
 // A/AAAA record is private/internal (DNS-based SSRF). Returns a failure reason, or null if allowed.
 async function hostBlockReason(hostname: string): Promise<string | null> {
     if (isBlockedHost(hostname)) return 'URL points to a private or internal host.';
+    let timer: ReturnType<typeof setTimeout> | undefined;
     try {
-        const addrs = await lookup(hostname, { all: true });
+        // Bound the lookup so a slow resolver cannot outlast the request timeout or delay retries.
+        const deadline = new Promise<never>((_, reject) => {
+            timer = setTimeout(() => reject(new Error('dns-timeout')), TIMEOUT_MS);
+        });
+        const addrs = await Promise.race([lookup(hostname, { all: true }), deadline]);
         if (addrs.some((a) => isBlockedAddress(a.address))) {
             return 'URL resolves to a private or internal address.';
         }
     } catch {
         return 'Could not resolve the site host.';
+    } finally {
+        clearTimeout(timer);
     }
     return null;
 }

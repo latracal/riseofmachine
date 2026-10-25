@@ -14,9 +14,10 @@ jobs:
     steps:
       - uses: actions/github-script@v7
         with:
-          # Use a PAT/App token so the `validated` label event triggers agent-intake.yml.
-          # Events from the default GITHUB_TOKEN do not start other workflow runs.
-          github-token: ${{ secrets.TRIAGE_TOKEN || secrets.GITHUB_TOKEN }}
+          # Required: a PAT/App token so the `validated` label event triggers agent-intake.yml.
+          # The default GITHUB_TOKEN cannot start other workflow runs, so no fallback here — a
+          # missing secret fails loudly instead of silently skipping the agent.
+          github-token: ${{ secrets.TRIAGE_TOKEN }}
           script: |
             const { owner, repo } = context.repo;
             const issue_number = context.issue.number;
