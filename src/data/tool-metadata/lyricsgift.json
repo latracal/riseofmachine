@@ -9,11 +9,11 @@
   "related": [
     "lyrics-to-song",
     "words-into-music",
+    "lrc-generator",
     "image-to-music-ai",
     "musegen",
     "elevenlabssound-effects",
     "murekaai",
-    "shazam",
-    "mubert"
+    "shazam"
   ]
 }

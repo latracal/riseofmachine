@@ -8,6 +8,14 @@
     "slug": "new-ui-templates"
   },
   {
+    "title": "AI3DGen",
+    "body": "Converts 2D images into 3D models.",
+    "tag": "Freemium",
+    "url": "https://www.ai3dgen.com/?ref=riseofmachine.com",
+    "date-added": "2026-10-26",
+    "slug": "ai3dgen"
+  },
+  {
     "title": "APPLORE",
     "body": "AI app icon generator and library.",
     "tag": "Freemium",
@@ -30,6 +38,14 @@
     "url": "https://www.banani.co?ref=riseofmachine.com",
     "date-added": "2026-04-07",
     "slug": "banani"
+  },
+  {
+    "title": "Car Customizer Online",
+    "body": "Preview car mods on your photo.",
+    "tag": "From $9.90/mo",
+    "url": "https://car-customizer.online/?ref=riseofmachine.com",
+    "date-added": "2026-10-26",
+    "slug": "car-customizer-online"
   },
   {
     "title": "Cheers GEO",
