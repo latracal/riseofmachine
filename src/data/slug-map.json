@@ -170,6 +170,9 @@
   "magictryon": [
     "art"
   ],
+  "makify-ai": [
+    "art"
+  ],
   "mediaai-art": [
     "art"
   ],
@@ -686,6 +689,9 @@
   "new-ui-templates": [
     "design"
   ],
+  "ai3dgen": [
+    "design"
+  ],
   "applore": [
     "design"
   ],
@@ -693,6 +699,9 @@
     "design"
   ],
   "banani": [
+    "design"
+  ],
+  "car-customizer-online": [
     "design"
   ],
   "cheers-geo": [
@@ -1166,6 +1175,9 @@
   "my-math-solver-ai": [
     "education"
   ],
+  "physics-ai": [
+    "education"
+  ],
   "quiz-cabin": [
     "education"
   ],
@@ -1412,6 +1424,9 @@
   "outfitswap-studio": [
     "fashion"
   ],
+  "roblox-shirt-maker": [
+    "fashion"
+  ],
   "saree-generator": [
     "fashion"
   ],
@@ -1632,6 +1647,9 @@
     "music"
   ],
   "jen": [
+    "music"
+  ],
+  "lrc-generator": [
     "music"
   ],
   "lyrics-to-song": [
@@ -1986,6 +2004,9 @@
     "photos"
   ],
   "photo": [
+    "photos"
+  ],
+  "photo-extender": [
     "photos"
   ],
   "photo-style": [
@@ -2771,6 +2792,9 @@
   "gemini-omni-ai": [
     "video"
   ],
+  "genjutsu-ai-video-editor": [
+    "video"
+  ],
   "genmo": [
     "video"
   ],
@@ -2955,6 +2979,9 @@
     "video"
   ],
   "textideo": [
+    "video"
+  ],
+  "tip-toeing-in-my-jordans-ai-video-generator": [
     "video"
   ],
   "towan-ai": [
@@ -3186,9 +3213,6 @@
     "xtras"
   ],
   "righthair": [
-    "xtras"
-  ],
-  "rise-of-machine": [
     "xtras"
   ],
   "seedream": [

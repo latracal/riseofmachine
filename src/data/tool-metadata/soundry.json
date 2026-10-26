@@ -12,8 +12,8 @@
     "musegen",
     "words-into-music",
     "snon-lyric",
+    "lrc-generator",
     "image-to-music-ai",
-    "lyrics-to-song",
-    "mubert"
+    "lyrics-to-song"
   ]
 }

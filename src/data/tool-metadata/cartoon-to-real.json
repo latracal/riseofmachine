@@ -9,11 +9,11 @@
   "related": [
     "animegenai",
     "photo-style",
+    "photo-extender",
     "enhancedating",
     "image-to-image",
     "imagine2",
     "fromimage-ai",
-    "ai-image-combiner",
-    "blur-background"
+    "ai-image-combiner"
   ]
 }

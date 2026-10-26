@@ -8,12 +8,12 @@
   "slug": "add-person-to-photo",
   "related": [
     "ghostface",
+    "photo-extender",
     "photo-style",
     "photify",
     "photoleap",
     "pebblely",
     "hama",
-    "fromimage-ai",
-    "ai-image-combiner"
+    "fromimage-ai"
   ]
 }
