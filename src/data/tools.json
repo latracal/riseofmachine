@@ -1869,6 +1869,14 @@
           "slug": "new-ui-templates"
         },
         {
+          "title": "AI3DGen",
+          "body": "Converts 2D images into 3D models.",
+          "tag": "Freemium",
+          "url": "https://www.ai3dgen.com/?ref=riseofmachine.com",
+          "date-added": "2026-10-26",
+          "slug": "ai3dgen"
+        },
+        {
           "title": "APPLORE",
           "body": "AI app icon generator and library.",
           "tag": "Freemium",
